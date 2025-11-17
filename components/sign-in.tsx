@@ -23,10 +23,10 @@ const SignInDialog = () => {
         <DialogHeader className="pt-4 px-4">
           <DialogTitle>
             <Image
-              src={"/logo.png"}
+              src={"/waku-logo.png"}
               alt="WakuWakuSRS"
-              width={200}
-              height={64}
+              width={140}
+              height={33}
               loading="eager"
             />
           </DialogTitle>

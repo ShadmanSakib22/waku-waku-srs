@@ -19,17 +19,19 @@ const Navbar = () => {
     }
   };
 
+  const displayName = user?.displayName?.split(" ")[0] || "Guest";
+
   return (
-    <header className="shadow-2xl">
-      <nav className="container py-2 bg-background/70">
+    <header className="sticky top-0 z-50 bg-background border-b-4 border-double shadow-xl">
+      <nav className="container py-2">
         <div className="flex justify-between items-center">
           <Link href="/" className="text-primary" aria-label="WakuWakuSRS Home">
             <Image
-              src={"/logo.png"}
+              src={"/waku-logo.png"}
               alt="WakuWakuSRS"
-              width={150}
-              height={48}
-              className="h-12 w-[150px]"
+              width={140}
+              height={33}
+              className="h-[33px] w-[140px]"
               loading="eager"
             />
           </Link>
@@ -63,18 +65,13 @@ const Navbar = () => {
           </menu>
         </div>
       </nav>
-      {loading ? (
-        <div className="text-sm text-muted-foreground" aria-live="polite">
-          Loading...
-        </div>
-      ) : user ? (
-        <aside
-          className="bg-primary text-primary-foreground text-center py-0.5 border-y text-xs font-mono"
-          aria-label="Welcome message"
-        >
-          Goodluck! {user?.displayName || user?.email}
-        </aside>
-      ) : null}
+      <div className="bg-secondary text-secondary-foreground py-1 text-center font-mono text-xs sm:text-sm">
+        {user ? (
+          <>Logged as, {displayName}!</>
+        ) : (
+          <>Log in to track your progress and start studying!</>
+        )}
+      </div>
     </header>
   );
 };
