@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 
 import { auth } from "@/lib/firebase";
+import { redirect } from "next/navigation";
 
 // helper
 export async function createSession(provider: AuthProvider) {
@@ -28,7 +29,8 @@ export async function createSession(provider: AuthProvider) {
       throw new Error("Failed to create server session.");
     }
 
-    // Login successful, redirect handled by the client component after this.
+    // Login successful
+    redirect("/");
   } catch (error) {
     console.warn("Sign-in process interrupted:", error);
   }
@@ -55,4 +57,5 @@ export async function signOutAndClearSession() {
   } catch (error) {
     console.error("Error during sign-out:", error);
   }
+  redirect("/");
 }
