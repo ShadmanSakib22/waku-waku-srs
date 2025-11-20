@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// components/StudyClient.tsx
+// components/StudyClient.tsx with Slider-based SM‑2 scoring
 
 "use client";
 
@@ -114,6 +114,9 @@ export function StudyClient({
     <div className="min-h-screen flex flex-col items-center p-6 bg-background text-foreground">
       <Header chapterId={chapterId} />
 
+      {/* Progress Bar */}
+      <ProgressBar />
+
       <Card className="w-full max-w-xl mt-4 p-6 shadow-xl">
         <CardC>
           {/* FRONT */}
@@ -138,6 +141,28 @@ export function StudyClient({
           )}
         </CardC>
       </Card>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*                             PROGRESS BAR                                  */
+/* -------------------------------------------------------------------------- */
+function ProgressBar() {
+  const total = useStudySession((s) => s.reviewQueue.length);
+  const index = useStudySession((s) => s.currentCardIndex);
+
+  const remaining = Math.max(total - index - 1, 0);
+  const progress = total > 0 ? ((index + 1) / total) * 100 : 0;
+
+  return (
+    <div className="w-full max-w-xl mt-4">
+      <div className="text-sm mb-1 text-muted-foreground text-center">
+        {remaining} card(s) left
+      </div>
+      <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+        <div className="bg-primary h-2" style={{ width: `${progress}%` }} />
+      </div>
     </div>
   );
 }
@@ -276,7 +301,7 @@ function SessionComplete({ chapterId, nextReviewTime }: any) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* LOADING / ERROR */
+/*                               LOADING / ERROR                               */
 /* -------------------------------------------------------------------------- */
 function LoadingState({ chapterId }: any) {
   return (
