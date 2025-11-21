@@ -4,33 +4,46 @@ import {
   GithubAuthProvider,
   AuthProvider,
   signInWithPopup,
+  signInWithRedirect,
   signOut as firebaseSignOut,
 } from "firebase/auth";
 
 import { auth } from "@/lib/firebase";
 import { redirect } from "next/navigation";
 
+// Helper function to detect mobile browsers
+const isMobile = () =>
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent
+  );
+
 // helper
 export async function createSession(provider: AuthProvider) {
   try {
-    const result = await signInWithPopup(auth, provider);
+    if (isMobile()) {
+      // Use redirect for mobile browsers
+      await signInWithRedirect(auth, provider);
+    } else {
+      // Use popup for desktop
+      const result = await signInWithPopup(auth, provider);
 
-    // Get the fresh ID token from the authenticated user
-    const idToken = await result.user.getIdToken();
+      // Get the fresh ID token from the authenticated user
+      const idToken = await result.user.getIdToken();
 
-    // Call the server to exchange the ID Token for a secure cookie
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idToken }),
-    });
+      // Call the server to exchange the ID Token for a secure cookie
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to create server session.");
+      if (!response.ok) {
+        throw new Error("Failed to create server session.");
+      }
+
+      // Login successful
+      redirect("/");
     }
-
-    // Login successful
-    redirect("/");
   } catch (error) {
     console.warn("Sign-in process interrupted:", error);
   }
