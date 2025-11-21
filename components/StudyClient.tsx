@@ -5,6 +5,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useStudySession, CardContent } from "@/hooks/useStudySession";
+import useAuth from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -56,6 +57,8 @@ export function StudyClient({
   userId,
   staticDeckContent,
 }: StudyClientProps) {
+  const { user, loading: authLoading } = useAuth();
+
   const currentCardIndex = useStudySession((s) => s.currentCardIndex);
   const reviewQueue = useStudySession((s) => s.reviewQueue);
   const isCardFlipped = useStudySession((s) => s.isCardFlipped);
@@ -63,7 +66,7 @@ export function StudyClient({
   const error = useStudySession((s) => s.error);
   const isSessionActive = useStudySession((s) => s.isSessionActive);
   const isSessionComplete = useStudySession((s) => s.isSessionComplete);
-  const nextReviewTime = useStudySession((s) => s.nextReviewTime);
+  const isSubmitting = useStudySession((s) => s.isSubmitting);
 
   const initializeSession = useStudySession((s) => s.initializeSession);
   const flipCard = useStudySession((s) => s.flipCard);
@@ -79,6 +82,8 @@ export function StudyClient({
   useEffect(() => {
     if (
       !initializedRef.current &&
+      !authLoading &&
+      user &&
       userId &&
       chapterId &&
       staticDeckContent.length > 0
@@ -87,7 +92,14 @@ export function StudyClient({
       const unsub = initializeSession(userId, chapterId, staticDeckContent);
       return () => unsub && unsub();
     }
-  }, [userId, chapterId, staticDeckContent, initializeSession]);
+  }, [
+    authLoading,
+    user,
+    userId,
+    chapterId,
+    staticDeckContent,
+    initializeSession,
+  ]);
 
   /* ------------------------------- Speech API ------------------------------ */
   const speakKanji = (text: string) => {
@@ -100,12 +112,10 @@ export function StudyClient({
   };
 
   /* ------------------------------- Render Cases ---------------------------- */
+  if (authLoading) return <LoadingState chapterId={chapterId} />;
   if (loading) return <LoadingState chapterId={chapterId} />;
   if (error) return <ErrorState error={error} />;
-  if (isSessionComplete)
-    return (
-      <SessionComplete chapterId={chapterId} nextReviewTime={nextReviewTime} />
-    );
+  if (isSessionComplete) return <SessionComplete chapterId={chapterId} />;
   if (!isSessionActive || !currentCard)
     return <LoadingState chapterId={chapterId} />;
 
@@ -137,6 +147,7 @@ export function StudyClient({
               score={score}
               setScore={setScore}
               handleReview={handleReview}
+              isSubmitting={isSubmitting}
             />
           )}
         </CardC>
@@ -179,17 +190,7 @@ function FrontCard({
 }: any) {
   return (
     <div className="flex flex-col items-center space-y-6">
-      <h1 className="text-8xl font-bold select-none">{card.kanji}</h1>
-
-      {showRomaji ? (
-        <p className="text-3xl font-mono text-primary">{card.romaji}</p>
-      ) : (
-        <Button variant="secondary" onClick={() => setShowRomaji(true)}>
-          <BookOpen className="mr-2 h-5 w-5" /> Show Romaji
-        </Button>
-      )}
-
-      <div className="flex gap-4 pt-4">
+      <div className="flex gap-4 pb-4">
         <Button variant="secondary" onClick={() => speakKanji(card.kanji)}>
           <Volume2 className="mr-2 h-5 w-5" /> Audio
         </Button>
@@ -198,6 +199,16 @@ function FrontCard({
           <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       </div>
+
+      <h1 className="text-5xl font-bold select-none">{card.kanji}</h1>
+
+      {showRomaji ? (
+        <p className="text-3xl font-mono text-primary">{card.romaji}</p>
+      ) : (
+        <Button variant="secondary" onClick={() => setShowRomaji(true)}>
+          <BookOpen className="mr-2 h-5 w-5" /> Show Romaji
+        </Button>
+      )}
     </div>
   );
 }
@@ -205,7 +216,7 @@ function FrontCard({
 /* -------------------------------------------------------------------------- */
 /*                                    BACK                                    */
 /* -------------------------------------------------------------------------- */
-function BackCard({ card, score, setScore, handleReview }: any) {
+function BackCard({ card, score, setScore, handleReview, isSubmitting }: any) {
   const scoreObj = scoreLabels.find((s) => s.score === score)!;
 
   const submit = async () => {
@@ -244,14 +255,23 @@ function BackCard({ card, score, setScore, handleReview }: any) {
           step={1}
           value={[score]}
           onValueChange={(v) => setScore(v[0])}
+          className="border rounded-md border-primary"
+          disabled={isSubmitting}
         />
         <p className="text-center mt-2 text-lg font-medium">
           {score} — {scoreObj.label}
         </p>
       </div>
 
-      <Button className="w-full mt-4" onClick={submit}>
-        Next
+      <Button className="w-full mt-4" onClick={submit} disabled={isSubmitting}>
+        {isSubmitting ? (
+          <>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+            Saving...
+          </>
+        ) : (
+          "Next"
+        )}
       </Button>
     </div>
   );
@@ -264,7 +284,7 @@ function Header({ chapterId }: any) {
   return (
     <Card className="w-full max-w-xl p-4 bg-primary text-primary-foreground shadow-md">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold">
+        <CardTitle className="text-lg font-semibold capitalize">
           Studying — {chapterId.replace("-", "#")}
         </CardTitle>
       </CardHeader>
@@ -275,21 +295,18 @@ function Header({ chapterId }: any) {
 /* -------------------------------------------------------------------------- */
 /*                            SESSION COMPLETE                                 */
 /* -------------------------------------------------------------------------- */
-function SessionComplete({ chapterId, nextReviewTime }: any) {
-  const nextTime = nextReviewTime
-    ? new Date(nextReviewTime).toLocaleString()
-    : "later";
-
+function SessionComplete({ chapterId }: any) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background text-foreground">
       <Card className="p-8 max-w-lg text-center space-y-6 shadow-xl">
         <CheckCircle2 className="mx-auto h-12 w-12 text-green-600" />
         <h1 className="text-3xl font-bold">Session Complete 🎉</h1>
         <p className="text-lg">
-          You&apos;ve finished everything due in <strong>{chapterId}</strong>.
+          You&apos;ve finished everything due in{" "}
+          <strong className="capitalize">{chapterId.replace("-", "#")}</strong>.
         </p>
         <p className="text-md text-muted-foreground">
-          Next review: <strong>{nextTime}</strong>
+          Check back in a few hours
         </p>
 
         <Link href="/">
@@ -306,7 +323,9 @@ function SessionComplete({ chapterId, nextReviewTime }: any) {
 function LoadingState({ chapterId }: any) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-      <p className="text-xl font-semibold">Loading {chapterId}…</p>
+      <p className="text-xl font-semibold capitalize">
+        Loading {chapterId.replace("-", "#")}…
+      </p>
     </div>
   );
 }

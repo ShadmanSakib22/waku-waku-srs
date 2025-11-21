@@ -54,6 +54,7 @@ interface StudySessionState {
   reviewScore: number;
   newCardsServedToday: number;
   nextReviewTime: number | null;
+  isSubmitting: boolean;
 
   // actions
   setChapter: (chapterId: string) => void;
@@ -128,6 +129,7 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
   reviewScore: 5,
   newCardsServedToday: 0,
   nextReviewTime: null,
+  isSubmitting: false,
 
   /* ---------------------- simple setters ------------------------- */
   setChapter: (chapterId: string) =>
@@ -326,13 +328,17 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
 
   /* ------------------------ handleReview -------------------------- */
   handleReview: async (score: number) => {
+    set({ isSubmitting: true });
     const state = get();
     const currentCard = state.reviewQueue[state.currentCardIndex];
     const activeChapterId = state.activeChapterId;
     const userId = state.currentUserId;
 
     if (!currentCard || !activeChapterId || !userId) {
-      set({ error: "Cannot process review: Missing card/session data." });
+      set({
+        error: "Cannot process review: Missing card/session data.",
+        isSubmitting: false,
+      });
       return;
     }
 
@@ -382,6 +388,7 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
           err instanceof Error
             ? err.message
             : "Unexpected error saving progress.",
+        isSubmitting: false,
       });
       return;
     }
@@ -400,6 +407,8 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
           set((s) => ({ newCardsServedToday: s.newCardsServedToday + 1 }));
         }
         get().assembleQueue();
+        // Reset flip state after reassembling
+        set({ isCardFlipped: false, isSubmitting: false });
         return;
       }
 
@@ -411,5 +420,6 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
       // Advance to next card
       get().nextCard();
     }
+    set({ isSubmitting: false });
   },
 }));
