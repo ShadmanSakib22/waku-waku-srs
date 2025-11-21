@@ -265,7 +265,7 @@ function Header({ chapterId }: any) {
     <Card className="w-full max-w-xl p-4 bg-primary text-primary-foreground shadow-md">
       <CardHeader>
         <CardTitle className="text-lg font-semibold">
-          Studying — {chapterId}
+          Studying — {chapterId.replace("-", "#")}
         </CardTitle>
       </CardHeader>
     </Card>

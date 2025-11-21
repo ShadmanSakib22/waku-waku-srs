@@ -1,0 +1,366 @@
+[
+  {
+    "id": "chapter-6-1",
+    "kanji": "もうすぐ",
+    "romaji": "mousugu",
+    "description": "soon; before long",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-2",
+    "kanji": "プレゼント",
+    "romaji": "purezento",
+    "description": "present",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-3",
+    "kanji": "あげる",
+    "romaji": "ageru",
+    "description": "to give (to a person of equal or lower status)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-4",
+    "kanji": "花",
+    "romaji": "hana",
+    "description": "flower",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-5",
+    "kanji": "いい",
+    "romaji": "ii",
+    "description": "good",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-6",
+    "kanji": "ペンケース",
+    "romaji": "penkeesu",
+    "description": "pencil case",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-7",
+    "kanji": "そうです",
+    "romaji": "sou desu",
+    "description": "That is right; I think so",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-8",
+    "kanji": "もらう",
+    "romaji": "morau",
+    "description": "to receive (from a person of equal or lower status)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-9",
+    "kanji": "あ、",
+    "romaji": "a,",
+    "description": "Oh!",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-10",
+    "kanji": "まいとし",
+    "romaji": "maitoshi",
+    "description": "every year",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-11",
+    "kanji": "おべんとう",
+    "romaji": "obentou",
+    "description": "lunch box",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-12",
+    "kanji": "りょうり",
+    "romaji": "ryouri",
+    "description": "cooking; cuisine",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-13",
+    "kanji": "ならう",
+    "romaji": "narau",
+    "description": "to learn",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-14",
+    "kanji": "たまごやき",
+    "romaji": "tamagoyaki",
+    "description": "Japanese omelet",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-15",
+    "kanji": "おしえる",
+    "romaji": "oshieru",
+    "description": "to teach",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-16",
+    "kanji": "送る",
+    "romaji": "okuru",
+    "description": "to send",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-17",
+    "kanji": "メール",
+    "romaji": "meeru",
+    "description": "email",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-18",
+    "kanji": "おじゃまします",
+    "romaji": "ojamashimasu",
+    "description": "Excuse me for disturbing (when entering someone's home)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-19",
+    "kanji": "いらっしゃい",
+    "romaji": "irasshai",
+    "description": "Welcome (casual)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-20",
+    "kanji": "これから",
+    "romaji": "korekara",
+    "description": "from now on",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-21",
+    "kanji": "てつだう",
+    "romaji": "tetsudau",
+    "description": "to help; to assist",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-22",
+    "kanji": "あれ？",
+    "romaji": "are?",
+    "description": "Huh? (surprise/question)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-23",
+    "kanji": "あっ、",
+    "romaji": "a,",
+    "description": "Oh! (sudden realization)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-24",
+    "kanji": "ほんとう",
+    "romaji": "hontou",
+    "description": "really; truly",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-25",
+    "kanji": "だいじょうぶな",
+    "romaji": "daijoubu na",
+    "description": "all right; safe; okay",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-26",
+    "kanji": "わかりました",
+    "romaji": "wakarimashita",
+    "description": "I understand; I see",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-27",
+    "kanji": "お気を付けて",
+    "romaji": "o ki wo tsukete",
+    "description": "Please take care (when someone is leaving)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-28",
+    "kanji": "てがみ",
+    "romaji": "tegami",
+    "description": "letter",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-29",
+    "kanji": "チョコレート",
+    "romaji": "chokoreeto",
+    "description": "chocolate",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-30",
+    "kanji": "チケット",
+    "romaji": "chiketto",
+    "description": "ticket",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-31",
+    "kanji": "母の日",
+    "romaji": "haha no hi",
+    "description": "Mother's Day",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-32",
+    "kanji": "おかあさん",
+    "romaji": "okaasan",
+    "description": "mother",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-33",
+    "kanji": "ハンカチ",
+    "romaji": "hankachi",
+    "description": "handkerchief",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-34",
+    "kanji": "マンガ",
+    "romaji": "manga",
+    "description": "manga (comics)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-35",
+    "kanji": "ネクタイ",
+    "romaji": "nekutai",
+    "description": "tie",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-36",
+    "kanji": "いくつ",
+    "romaji": "ikutsu",
+    "description": "how many",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-37",
+    "kanji": "たべ物",
+    "romaji": "tabemono",
+    "description": "food",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-38",
+    "kanji": "入れる",
+    "romaji": "ireru",
+    "description": "to put in",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-39",
+    "kanji": "かず",
+    "romaji": "kazu",
+    "description": "number",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-40",
+    "kanji": "電話",
+    "romaji": "denwa",
+    "description": "telephone",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-41",
+    "kanji": "かける",
+    "romaji": "kakeru",
+    "description": "to make a phone call",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-42",
+    "kanji": "オーストラリア",
+    "romaji": "oosutoraria",
+    "description": "Australia",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-43",
+    "kanji": "今月",
+    "romaji": "kongetsu",
+    "description": "this month",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-44",
+    "kanji": "電話ばんごう",
+    "romaji": "denwa bangou",
+    "description": "telephone number",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-45",
+    "kanji": "にもつ",
+    "romaji": "nimotsu",
+    "description": "luggage; package",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-46",
+    "kanji": "おさら",
+    "romaji": "osara",
+    "description": "plate; dish",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-47",
+    "kanji": "とる",
+    "romaji": "toru",
+    "description": "to get (e.g., to take a plate)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-48",
+    "kanji": "とる",
+    "romaji": "toru",
+    "description": "to take (e.g., to take a package)",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-49",
+    "kanji": "エアコン",
+    "romaji": "eakon",
+    "description": "air conditioner",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-50",
+    "kanji": "けす",
+    "romaji": "kesu",
+    "description": "to turn off (power); to erase",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-51",
+    "kanji": "虫",
+    "romaji": "mushi",
+    "description": "insect; bug",
+    "chapterId": "chapter-6"
+  },
+  {
+    "id": "chapter-6-52",
+    "kanji": "まど",
+    "romaji": "mado",
+    "description": "window",
+    "chapterId": "chapter-6"
+  }
+]

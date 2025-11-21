@@ -24,7 +24,7 @@ import { db } from "@/lib/firebase";
  */
 
 /* ----------------------------- CONFIG ------------------------------ */
-const APP_SLUG = process.env.NEXT_PUBLIC_APP_SLUG ?? "vocab-flashcard-app";
+const APP_SLUG = process.env.NEXT_PUBLIC_APP_SLUG ?? "flashcard-app";
 const API_WRITE_ROUTE = "/api/review-progress";
 
 /* ------------------------------ TYPES ------------------------------ */

@@ -25,12 +25,12 @@ export interface DashboardDeck extends DeckInfo {
 const DECKS: DeckInfo[] = [
   {
     id: "chapter-6",
-    title: "Lesson 6",
+    title: "Chapter 6",
     totalCards: 52,
   },
   {
     id: "chapter-7",
-    title: "Lesson 7",
+    title: "Chapter 7",
     totalCards: 41,
   },
 ];
