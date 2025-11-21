@@ -57,5 +57,5 @@ export async function signOutAndClearSession() {
   } catch (error) {
     console.error("Error during sign-out:", error);
   }
-  redirect("/");
+  window.location.assign("/");
 }

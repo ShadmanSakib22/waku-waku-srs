@@ -29,10 +29,10 @@ export async function getCurrentUser() {
 }
 
 /**
- * Guards a route/action. Redirects to /login if the user is unauthenticated.
+ * Guards a route/action. Redirects to / if the user is unauthenticated.
  * @returns The authenticated Firebase UserRecord.
  */
-export async function protectRoute(redirectTo: string = "/login") {
+export async function protectRoute(redirectTo: string = "/") {
   const user = await getCurrentUser();
   if (!user) {
     redirect(redirectTo);

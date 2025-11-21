@@ -13,12 +13,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { signInWithGithub, signInWithGoogle } from "@/lib/auth-client";
 
-const SignInDialog = () => {
+interface SignInDialogProps {
+  open?: boolean; // controlled
+  defaultOpen?: boolean; // for uncontrolled fallback
+  onOpenChange?: (open: boolean) => void;
+  showTrigger?: boolean; // if you want to hide the "Login" button
+}
+
+const SignInDialog = ({
+  open,
+  defaultOpen,
+  onOpenChange,
+  showTrigger = true,
+}: SignInDialogProps) => {
   return (
-    <Dialog>
-      <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium h-9 px-4 py-2">
-        Login
-      </DialogTrigger>
+    <Dialog open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange}>
+      {/* Trigger only shown if enabled */}
+      {showTrigger && (
+        <DialogTrigger className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium h-9 px-4 py-2">
+          Login
+        </DialogTrigger>
+      )}
+
       <DialogContent className="p-0 overflow-hidden border-4 border-double max-w-[320px]! max-h-screen overflow-y-auto">
         <DialogHeader className="pt-4 px-4">
           <DialogTitle>
@@ -31,9 +47,10 @@ const SignInDialog = () => {
             />
           </DialogTitle>
           <DialogDescription>
-            Requires <b>Login</b> to track study progress. <br />
+            Requires <b>Login</b> to track study progress.
           </DialogDescription>
         </DialogHeader>
+
         <hr />
 
         <div className="space-y-5">
@@ -41,7 +58,8 @@ const SignInDialog = () => {
             <div className="text-xs text-center border rounded-3xl px-3 py-1.5 border-primary font-mono">
               Select OAuth Provider
             </div>
-            <Button variant={"outline"} onClick={signInWithGoogle}>
+
+            <Button variant="outline" onClick={signInWithGoogle}>
               <Image
                 src="/svg/google.svg"
                 alt="Google"
@@ -50,7 +68,8 @@ const SignInDialog = () => {
               />
               Continue with Google
             </Button>
-            <Button variant={"outline"} onClick={signInWithGithub}>
+
+            <Button variant="outline" onClick={signInWithGithub}>
               <Image
                 src="/svg/github.svg"
                 alt="GitHub"
@@ -60,6 +79,7 @@ const SignInDialog = () => {
               Continue with GitHub
             </Button>
           </div>
+
           <DialogFooter className="uppercase text-xs text-muted-foreground bg-muted py-4 font-mono">
             Secured by Firebase{" "}
             <Image

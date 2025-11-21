@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import SignInDialog from "@/components/sign-in";
+import SignInDialog from "@/components/SignInDialog";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 import useAuth from "@/hooks/useAuth";

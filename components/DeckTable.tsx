@@ -1,9 +1,11 @@
 "use client";
+import { useState } from "react";
 import useAuth from "@/hooks/useAuth";
 import { DashboardDeck } from "@/lib/dashboard-data"; // type
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Lock } from "lucide-react";
 import Link from "next/link";
+import SignInDialog from "@/components/SignInDialog";
 interface DeckTableProps {
   deck: DashboardDeck;
 }
@@ -11,11 +13,9 @@ interface DeckTableProps {
 function DeckTable({ deck }: DeckTableProps) {
   const isDue = (deck.dueNowCount ?? 0) > 0;
   const { user } = useAuth();
-  const buttonIcon = user ? (
-    <ArrowRight className="ml-2 size-5" />
-  ) : (
-    <Lock className="ml-2 size-5" />
-  );
+
+  //Button state
+  const [dialogState, setDialogState] = useState(false);
 
   return (
     <div className="px-4 py-3 border-b bg-muted hover:bg-background transition-colors last:border-b-0">
@@ -44,12 +44,26 @@ function DeckTable({ deck }: DeckTableProps) {
             )}
           </div>
         </div>
-        <Link href={`/study/${deck.id}`} className="ml-auto">
-          <Button variant={isDue ? "default" : user ? "secondary" : "default"}>
-            Study
-            {buttonIcon}
+        {user && (
+          <Link href={`/study/${deck.id}`} className="ml-auto">
+            <Button
+              variant={isDue ? "default" : user ? "secondary" : "default"}
+            >
+              Study
+              <ArrowRight className="size-5" />
+            </Button>
+          </Link>
+        )}
+        {!user && (
+          <Button className="ml-auto" onClick={() => setDialogState(true)}>
+            Study <Lock className="size-5" />
           </Button>
-        </Link>
+        )}
+        <SignInDialog
+          showTrigger={false}
+          open={dialogState}
+          onOpenChange={setDialogState}
+        />
       </div>
     </div>
   );
