@@ -6,28 +6,15 @@ import {
   computeDailyNewLimit,
   CardState,
 } from "@/lib/sm2-scheduler";
-import {
-  collection,
-  onSnapshot,
-  Timestamp,
-  QueryDocumentSnapshot,
-  DocumentData,
-} from "firebase/firestore";
+import { collection, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
-/**
- * useStudySession (MVP)
- *
- * - Daily new-card limit computed automatically from chapter size (3-day target).
- * - Keeps single Firestore listener, snapshot dedupe, shuffle, race-guards.
- * - Minimal state required by UI: queue, index, loading, error, flip state.
- */
-
-/* ----------------------------- CONFIG ------------------------------ */
 const APP_SLUG = process.env.NEXT_PUBLIC_APP_SLUG ?? "flashcard-app";
 const API_WRITE_ROUTE = "/api/review-progress";
 
-/* ------------------------------ TYPES ------------------------------ */
+/* -------------------------------------------------------------------------- */
+/* TYPES                                   */
+/* -------------------------------------------------------------------------- */
 export interface CardContent {
   id: string;
   kanji: string;
@@ -56,39 +43,40 @@ interface StudySessionState {
   nextReviewTime: number | null;
   isSubmitting: boolean;
 
+  // Internal unsubscribe reference
+  _unsubscribe: (() => void) | null;
+
   // actions
   setChapter: (chapterId: string) => void;
   setReviewScore: (score: number) => void;
   setDeckContent: (content: CardContent[]) => void;
-
   initializeSession: (
     userId: string,
     chapterId: string,
     staticDeckContent: CardContent[]
   ) => () => void;
   handleReview: (score: number) => Promise<void>;
-
   flipCard: () => void;
   nextCard: () => void;
   assembleQueue: () => void;
 }
 
-/* --------------------------- MODULE STATE -------------------------- */
-let moduleUnsubscribe: (() => void) | null = null;
-let moduleListenerKey: string | null = null;
-let lastSnapshotFingerprint: string | null = null;
+/* -------------------------------------------------------------------------- */
+/* HELPERS                                  */
+/* -------------------------------------------------------------------------- */
 
-/* --------------------------- UTIL HELPERS -------------------------- */
-
+// 1. Helper to safely convert Firestore timestamps or numbers to milliseconds
 const toMilliseconds = (value: unknown): number => {
   if (value instanceof Timestamp) return value.toMillis();
   if (typeof value === "number") return value;
-  if (typeof value === "string" && /^\\d+$/.test(value)) return Number(value);
+  if (typeof value === "string" && /^\d+$/.test(value)) return Number(value);
   return 0;
 };
 
+// 2. Helper to prepare values for Firestore (just passes the number through)
 const toFirestoreValue = (ms: number): number => ms;
 
+// 3. Shuffle helper
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -98,20 +86,9 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-function fingerprintDocs(docs: QueryDocumentSnapshot<DocumentData>[]) {
-  return docs
-    .map((d) => {
-      const dataStr = JSON.stringify(d.data());
-      let hash = 0;
-      for (let i = 0; i < dataStr.length; i++) {
-        hash = (hash * 31 + dataStr.charCodeAt(i)) >>> 0;
-      }
-      return `${d.id}:${hash}`;
-    })
-    .join("|");
-}
-
-/* ---------------------------- ZUSTAND STORE ------------------------ */
+/* -------------------------------------------------------------------------- */
+/* STORE                                   */
+/* -------------------------------------------------------------------------- */
 
 export const useStudySession = create<StudySessionState>((set, get) => ({
   activeChapterId: null,
@@ -130,8 +107,8 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
   newCardsServedToday: 0,
   nextReviewTime: null,
   isSubmitting: false,
+  _unsubscribe: null,
 
-  /* ---------------------- simple setters ------------------------- */
   setChapter: (chapterId: string) =>
     set({
       activeChapterId: chapterId,
@@ -142,6 +119,7 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
     }),
 
   setReviewScore: (score: number) => set({ reviewScore: score }),
+
   setDeckContent: (content: CardContent[]) =>
     set({
       staticDeckContent: content,
@@ -155,6 +133,7 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
       const newIndex = state.currentCardIndex + 1;
       const isComplete = newIndex >= state.reviewQueue.length;
 
+      // Recalculate next review time if complete
       const nextReviewTime = isComplete
         ? (() => {
             const now = Date.now();
@@ -175,12 +154,14 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
       };
     }),
 
-  /* ---------------------- assembleQueue -------------------------- */
   assembleQueue: () => {
     const s = get();
     const now = Date.now();
-
     const allCards = s.allChapterCards;
+
+    // Guard against assembling empty decks
+    if (allCards.length === 0) return;
+
     const dailyLimit =
       s.dailyNewCardLimit || computeDailyNewLimit(s.staticDeckContent.length);
 
@@ -198,19 +179,8 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
     const queueDue = shuffle(dueCards);
     const allowedNewSlots = Math.max(0, dailyLimit - s.newCardsServedToday);
     const queueNew = shuffle(newCards).slice(0, allowedNewSlots);
-
     const combined = shuffle([...queueDue, ...queueNew]);
-
     const isComplete = combined.length === 0;
-
-    const nextReviewTime = isComplete
-      ? (() => {
-          const futureReviews = allCards
-            .filter((card) => card.nextReview > now)
-            .map((card) => card.nextReview);
-          return futureReviews.length > 0 ? Math.min(...futureReviews) : null;
-        })()
-      : null;
 
     set({
       reviewQueue: combined,
@@ -219,58 +189,26 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
       isSessionActive: combined.length > 0,
       loading: false,
       error: null,
-      nextReviewTime,
     });
   },
 
-  /* ---------------------- initializeSession ---------------------- */
   initializeSession: (userId, chapterId, staticDeckContent) => {
-    if (
-      !userId ||
-      !chapterId ||
-      !Array.isArray(staticDeckContent) ||
-      staticDeckContent.length === 0
-    ) {
-      console.error("initializeSession: missing required params");
-      return () => {};
+    const state = get();
+
+    // Clean up existing listener if changing contexts
+    if (state._unsubscribe) {
+      state._unsubscribe();
     }
 
-    const listenerKey = `${userId}|${chapterId}|${APP_SLUG}`;
-
-    if (moduleListenerKey === listenerKey && moduleUnsubscribe) {
-      set({
-        loading: false,
-        activeChapterId: chapterId,
-        currentUserId: userId,
-        staticDeckContent,
-        dailyNewCardLimit: computeDailyNewLimit(staticDeckContent.length),
-        nextReviewTime: null,
-      });
-      return moduleUnsubscribe;
-    }
-
-    if (moduleUnsubscribe) {
-      try {
-        moduleUnsubscribe();
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (e) {
-        /* ignore */
-      }
-      moduleUnsubscribe = null;
-      moduleListenerKey = null;
-      lastSnapshotFingerprint = null;
-    }
-
-    // cache static deck
-    const staticMap = new Map<string, CardContent>();
-    for (const c of staticDeckContent) staticMap.set(c.id, c);
+    // Cache static deck immediately
+    const dailyLimit = computeDailyNewLimit(staticDeckContent.length);
 
     set({
       loading: true,
       activeChapterId: chapterId,
       currentUserId: userId,
       staticDeckContent,
-      dailyNewCardLimit: computeDailyNewLimit(staticDeckContent.length),
+      dailyNewCardLimit: dailyLimit,
       newCardsServedToday: 0,
       error: null,
       nextReviewTime: null,
@@ -279,54 +217,47 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
     const progressCollectionPath = `artifacts/${APP_SLUG}/users/${userId}/${chapterId}_progress`;
     const progressCollectionRef = collection(db, progressCollectionPath);
 
-    moduleListenerKey = listenerKey;
-    moduleUnsubscribe = onSnapshot(
+    const unsubscribe = onSnapshot(
       progressCollectionRef,
       (snapshot) => {
-        const docs = snapshot.docs;
-        const fingerprint = fingerprintDocs(docs);
-        if (fingerprint === lastSnapshotFingerprint) return;
-        lastSnapshotFingerprint = fingerprint;
-
-        try {
-          const userProgressMap = new Map<string, CardState>();
-          for (const doc of docs) {
-            const data = doc.data() as Record<string, unknown>;
-            if (!data?.cardId) continue;
-            const cardState: CardState = {
+        // 1. Process Data
+        const userProgressMap = new Map<string, CardState>();
+        snapshot.docs.forEach((doc) => {
+          const data = doc.data();
+          if (data?.cardId) {
+            userProgressMap.set(String(data.cardId), {
               cardId: String(data.cardId),
               easeFactor: Number(data.easeFactor ?? 2.5),
               repetitions: Number(data.repetitions ?? 0),
               lastInterval: Number(data.lastInterval ?? 0),
               nextReview: toMilliseconds(data.nextReview ?? 0),
-            };
-            userProgressMap.set(cardState.cardId, cardState);
+            });
           }
+        });
 
-          const merged: StudyCard[] = [];
-          for (const content of staticDeckContent) {
-            const progress =
-              userProgressMap.get(content.id) ?? initializeNewCard(content.id);
-            merged.push({ ...content, ...progress });
-          }
+        const merged: StudyCard[] = staticDeckContent.map((content) => ({
+          ...content,
+          ...(userProgressMap.get(content.id) ?? initializeNewCard(content.id)),
+        }));
 
-          set({ allChapterCards: merged, loading: false, error: null });
+        // 2. Update State
+        set({ allChapterCards: merged, loading: false, error: null });
+
+        // 3. Only assemble queue if the session is NOT active yet.
+        if (!get().isSessionActive && !get().isSessionComplete) {
           get().assembleQueue();
-        } catch (err) {
-          console.error("Error processing progress snapshot:", err);
-          set({ loading: false, error: "Failed to load study progress." });
         }
       },
       (error) => {
-        console.error("Firestore progress snapshot failed:", error);
+        console.error("Firestore error:", error);
         set({ loading: false, error: "Failed to load study progress." });
       }
     );
 
-    return moduleUnsubscribe;
+    set({ _unsubscribe: unsubscribe });
+    return unsubscribe;
   },
 
-  /* ------------------------ handleReview -------------------------- */
   handleReview: async (score: number) => {
     set({ isSubmitting: true });
     const state = get();
@@ -335,16 +266,14 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
     const userId = state.currentUserId;
 
     if (!currentCard || !activeChapterId || !userId) {
-      set({
-        error: "Cannot process review: Missing card/session data.",
-        isSubmitting: false,
-      });
+      set({ error: "Missing session data.", isSubmitting: false });
       return;
     }
 
-    const cardIdBefore = currentCard.id;
+    // Calculate new state purely locally first
     const newCardState = processReview(currentCard, score);
 
+    // Prepare payload
     const payload = {
       chapterId: activeChapterId,
       cardId: newCardState.cardId,
@@ -357,69 +286,29 @@ export const useStudySession = create<StudySessionState>((set, get) => ({
       },
     };
 
-    let responseOk = false;
     try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 10_000);
-
       const res = await fetch(API_WRITE_ROUTE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        signal: controller.signal,
       });
 
-      clearTimeout(timeout);
-      if (!res.ok) {
-        const body = await res.text().catch(() => "");
-        let parsedMsg = "Could not save progress. Server returned an error.";
-        try {
-          parsedMsg = JSON.parse(body)?.message ?? parsedMsg;
-        } catch {
-          /* ignore */
-        }
-        throw new Error(parsedMsg);
-      }
-      responseOk = true;
-    } catch (err) {
-      console.error("Failed to save progress via server:", err);
-      set({
-        error:
-          err instanceof Error
-            ? err.message
-            : "Unexpected error saving progress.",
-        isSubmitting: false,
-      });
-      return;
-    }
+      if (!res.ok) throw new Error("Failed to save");
 
-    if (responseOk) {
-      // race detection
-      const stateAfter = get();
-      const currentCardAfter =
-        stateAfter.reviewQueue[stateAfter.currentCardIndex];
-      if (!currentCardAfter || currentCardAfter.id !== cardIdBefore) {
-        console.warn(
-          "Race detected: card changed during review save. Reassembling queue."
-        );
-        // If this was a newly introduced card (repetitions went 0->1) count it as served
+      // Check race condition before advancing
+      const currentState = get();
+      if (currentState.currentCardIndex === state.currentCardIndex) {
+        // If it was a new card, count it
         if (currentCard.repetitions === 0 && newCardState.repetitions > 0) {
           set((s) => ({ newCardsServedToday: s.newCardsServedToday + 1 }));
         }
-        get().assembleQueue();
-        // Reset flip state after reassembling
-        set({ isCardFlipped: false, isSubmitting: false });
-        return;
+        get().nextCard();
       }
-
-      // If this was a newly introduced card (repetitions went 0->1) count it as served
-      if (currentCard.repetitions === 0 && newCardState.repetitions > 0) {
-        set((s) => ({ newCardsServedToday: s.newCardsServedToday + 1 }));
-      }
-
-      // Advance to next card
-      get().nextCard();
+    } catch (err) {
+      console.error(err);
+      set({ error: "Save failed. Please try again." });
+    } finally {
+      set({ isSubmitting: false });
     }
-    set({ isSubmitting: false });
   },
 }));

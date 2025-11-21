@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // components/StudyClient.tsx with Slider-based SM‑2 scoring
 
 "use client";
@@ -37,6 +36,25 @@ interface StudyClientProps {
   staticDeckContent: CardContent[];
 }
 
+interface FrontCardProps {
+  card: CardContent;
+  showRomaji: boolean;
+  setShowRomaji: (v: boolean) => void;
+  flipCard: () => void;
+  speakKanji: (text: string) => void;
+}
+
+interface BackCardProps {
+  card: CardContent;
+  score: number;
+  setScore: (v: number) => void;
+  handleReview: (score: number) => Promise<void>;
+  isSubmitting: boolean;
+}
+
+interface ChapterIdProps {
+  chapterId: string;
+}
 /* -------------------------------------------------------------------------- */
 /*                            SCORING DEFINITIONS                             */
 /* -------------------------------------------------------------------------- */
@@ -187,7 +205,7 @@ function FrontCard({
   setShowRomaji,
   flipCard,
   speakKanji,
-}: any) {
+}: FrontCardProps) {
   return (
     <div className="flex flex-col items-center space-y-6">
       <div className="flex gap-4 pb-4">
@@ -216,7 +234,13 @@ function FrontCard({
 /* -------------------------------------------------------------------------- */
 /*                                    BACK                                    */
 /* -------------------------------------------------------------------------- */
-function BackCard({ card, score, setScore, handleReview, isSubmitting }: any) {
+function BackCard({
+  card,
+  score,
+  setScore,
+  handleReview,
+  isSubmitting,
+}: BackCardProps) {
   const scoreObj = scoreLabels.find((s) => s.score === score)!;
 
   const submit = async () => {
@@ -280,7 +304,7 @@ function BackCard({ card, score, setScore, handleReview, isSubmitting }: any) {
 /* -------------------------------------------------------------------------- */
 /*                               HEADER BAR                                   */
 /* -------------------------------------------------------------------------- */
-function Header({ chapterId }: any) {
+function Header({ chapterId }: ChapterIdProps) {
   return (
     <Card className="w-full max-w-xl p-4 bg-primary text-primary-foreground shadow-md">
       <CardHeader>
@@ -295,7 +319,7 @@ function Header({ chapterId }: any) {
 /* -------------------------------------------------------------------------- */
 /*                            SESSION COMPLETE                                 */
 /* -------------------------------------------------------------------------- */
-function SessionComplete({ chapterId }: any) {
+function SessionComplete({ chapterId }: ChapterIdProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-background text-foreground">
       <Card className="p-8 max-w-lg text-center space-y-6 shadow-xl">
@@ -320,7 +344,7 @@ function SessionComplete({ chapterId }: any) {
 /* -------------------------------------------------------------------------- */
 /*                               LOADING / ERROR                               */
 /* -------------------------------------------------------------------------- */
-function LoadingState({ chapterId }: any) {
+function LoadingState({ chapterId }: ChapterIdProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
       <p className="text-xl font-semibold capitalize">
@@ -330,6 +354,7 @@ function LoadingState({ chapterId }: any) {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ErrorState({ error }: any) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background text-foreground">

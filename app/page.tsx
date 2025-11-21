@@ -32,7 +32,7 @@ export default async function DashboardPage() {
         </p>
         <ul className="font-mono text-muted-foreground text-sm list-disc px-4">
           <li>
-            High frequency SM-2 Alogrithm for mastering lesson vocabulary in 3
+            High frequency SM-2 Alogrithm for mastering lesson vocabulary in 5
             days time.
           </li>
           <li>Study 1 lesson at a time for best efficiency.</li>

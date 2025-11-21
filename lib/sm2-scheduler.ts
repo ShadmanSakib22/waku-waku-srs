@@ -74,9 +74,9 @@ function calculateInterval(
 
 /**
  * Compute a daily new-card limit given a chapter size and target days.
- * Default targetDays = 3 to finish chapter in ~3 days.
+ * Default targetDays = 5 to finish chapter in ~5 days.
  */
-export function computeDailyNewLimit(chapterSize: number, targetDays = 3) {
+export function computeDailyNewLimit(chapterSize: number, targetDays = 5) {
   if (!chapterSize || chapterSize <= 0) return 1;
   return Math.max(1, Math.ceil(chapterSize / targetDays));
 }
@@ -121,12 +121,9 @@ export const processReview = (
   if (quality < 3) {
     // Failure: reset repetitions and assign a short requeue window
     newRepetitions = 0;
-    if (CAP_IMMEDIATE_REQUEUE) {
-      nextIntervalHours = IMMEDIATE_REQUEUE_HOURS;
-    } else {
-      // immediate (now), but we avoid exact now to prevent tight loops
-      nextIntervalHours = 0;
-    }
+    nextIntervalHours = CAP_IMMEDIATE_REQUEUE
+      ? Math.max(0.1, IMMEDIATE_REQUEUE_HOURS)
+      : 0;
   } else {
     // Success: increment repetitions and compute interval
     newRepetitions = (current.repetitions ?? 0) + 1;

@@ -80,7 +80,7 @@ const SignInDialog = ({
             </Button>
           </div>
 
-          <DialogFooter className="uppercase text-xs text-muted-foreground bg-muted py-4 font-mono">
+          <DialogFooter className="uppercase text-xs text-muted-foreground bg-muted py-4 font-mono flex-row items-center justify-center">
             Secured by Firebase{" "}
             <Image
               src="/svg/firebase.svg"
