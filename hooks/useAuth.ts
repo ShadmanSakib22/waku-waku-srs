@@ -27,8 +27,7 @@ export default function useAuth() {
             throw new Error("Failed to create server session.");
           }
 
-          // Login successful, redirect to home
-          window.location.href = "/";
+          // Login successful, auth state will update via onAuthStateChanged
         }
       } catch (error) {
         console.warn("Redirect sign-in process error:", error);
