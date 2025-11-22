@@ -11,7 +11,6 @@ import {
 } from "firebase/auth";
 
 import { auth } from "@/lib/firebase";
-import { redirect } from "next/navigation";
 
 // Helper function to detect mobile browsers
 const isMobile = () =>
@@ -22,20 +21,17 @@ const isMobile = () =>
 // helper
 export async function createSession(provider: AuthProvider) {
   try {
-    // Set persistence to local to preserve login state across redirects on mobile
     await setPersistence(auth, browserLocalPersistence);
 
     if (isMobile()) {
-      // Use redirect for mobile browsers
+      console.log("Mobile detected: using redirect flow");
       await signInWithRedirect(auth, provider);
+      // No redirect here — AuthInitializer will handle it via getRedirectResult
     } else {
-      // Use popup for desktop
+      console.log("Desktop detected: using popup flow");
       const result = await signInWithPopup(auth, provider);
-
-      // Get the fresh ID token from the authenticated user
       const idToken = await result.user.getIdToken();
 
-      // Call the server to exchange the ID Token for a secure cookie
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,14 +42,12 @@ export async function createSession(provider: AuthProvider) {
         throw new Error("Failed to create server session.");
       }
 
-      // Login successful
-      redirect("/");
+      // No redirect here — component handles it
     }
   } catch (error) {
-    console.warn("Sign-in process interrupted:", error);
+    console.error("Sign-in process error:", error);
   }
 }
-
 export function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   createSession(provider);

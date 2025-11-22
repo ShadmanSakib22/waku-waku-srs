@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { signInWithGithub, signInWithGoogle } from "@/lib/auth-client";
+
 import useAuth from "@/hooks/useAuth";
 
 interface SignInDialogProps {
@@ -28,9 +31,20 @@ const SignInDialog = ({
   showTrigger = true,
 }: SignInDialogProps) => {
   const { user } = useAuth();
+  const router = useRouter();
+
+  // Redirect when user logs in
+  useEffect(() => {
+    if (user) {
+      router.push("/");
+      onOpenChange?.(false);
+    }
+  }, [user, router, onOpenChange]);
+
   if (user) {
-    open = false;
+    return null; // Don't show dialog if logged in
   }
+
   return (
     <Dialog open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange}>
       {/* Trigger only shown if enabled */}
