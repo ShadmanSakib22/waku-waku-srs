@@ -1,6 +1,6 @@
 //hooks/useAuth
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { getRedirectResult } from "firebase/auth";
@@ -22,26 +22,25 @@ export default function useAuth() {
 }
 
 export function AuthInitializer() {
+  const ranOnce = useRef(false);
+
   useEffect(() => {
+    if (ranOnce.current) return; // Prevent double execution
+    ranOnce.current = true;
+
     const handleRedirectResult = async () => {
       try {
         const result = await getRedirectResult(auth);
         if (result?.user) {
-          console.log("Redirect result found, exchanging token...");
+          console.log("User verified via redirect:", result.user.uid);
 
+          // Exchange token for session cookie
           const idToken = await result.user.getIdToken();
-
-          const response = await fetch("/api/login", {
+          await fetch("/api/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ idToken }),
           });
-
-          if (!response.ok) {
-            throw new Error("Failed to create server session.");
-          }
-
-          console.log("Session created successfully");
         }
       } catch (error) {
         console.error("Redirect sign-in error:", error);
@@ -49,7 +48,7 @@ export function AuthInitializer() {
     };
 
     handleRedirectResult();
-  }, []); // Only runs once on mount
+  }, []);
 
   return null;
 }
