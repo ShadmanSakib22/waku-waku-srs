@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { signInWithGithub, signInWithGoogle } from "@/lib/auth-client";
+import useAuth from "@/hooks/useAuth";
 
 interface SignInDialogProps {
   open?: boolean; // controlled
@@ -26,6 +27,10 @@ const SignInDialog = ({
   onOpenChange,
   showTrigger = true,
 }: SignInDialogProps) => {
+  const { user } = useAuth();
+  if (user) {
+    open = false;
+  }
   return (
     <Dialog open={open} defaultOpen={defaultOpen} onOpenChange={onOpenChange}>
       {/* Trigger only shown if enabled */}

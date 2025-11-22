@@ -26,9 +26,9 @@ export default async function DashboardPage() {
           More features coming soon!
         </p>
 
-        <p className="text-xl text-muted-foreground mt-4 flex items-center flex-wrap">
-          <CircleQuestionMark className="text-primary inline size-6 mr-2" />
-          <span> SM-2 Alogorithm powered Flashcards.</span>
+        <p className="text-xl text-muted-foreground mt-4 flex gap-2 items-center">
+          <CircleQuestionMark className="text-primary size-5" />
+          SM-2 Alogorithm powered Flashcards.
         </p>
         <ul className="font-mono text-muted-foreground text-sm list-disc px-4">
           <li>
