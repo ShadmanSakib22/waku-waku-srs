@@ -64,7 +64,11 @@ const SignInDialog = ({
               Select OAuth Provider
             </div>
 
-            <Button variant="outline" onClick={signInWithGoogle}>
+            <Button
+              variant="outline"
+              className="z-100"
+              onClick={signInWithGoogle}
+            >
               <Image
                 src="/svg/google.svg"
                 alt="Google"
@@ -74,7 +78,11 @@ const SignInDialog = ({
               Continue with Google
             </Button>
 
-            <Button variant="outline" onClick={signInWithGithub}>
+            <Button
+              variant="outline"
+              className="z-100"
+              onClick={signInWithGithub}
+            >
               <Image
                 src="/svg/github.svg"
                 alt="GitHub"
