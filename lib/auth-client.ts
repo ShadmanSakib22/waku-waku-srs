@@ -49,14 +49,14 @@ export async function createSession(provider: AuthProvider) {
   }
 }
 
-export async function signInWithGoogle() {
+export function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
-  await createSession(provider);
+  createSession(provider);
 }
 
-export async function signInWithGithub() {
+export function signInWithGithub() {
   const provider = new GithubAuthProvider();
-  await createSession(provider);
+  createSession(provider);
 }
 
 // Sign-Out function (Clears both client and server sessions)
