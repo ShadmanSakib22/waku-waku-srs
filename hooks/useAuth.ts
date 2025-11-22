@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, User, getRedirectResult } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { redirect } from "next/navigation";
 
 export default function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -29,7 +28,7 @@ export default function useAuth() {
           }
 
           // Login successful, redirect to home
-          redirect("/");
+          window.location.href = "/";
         }
       } catch (error) {
         console.warn("Redirect sign-in process error:", error);

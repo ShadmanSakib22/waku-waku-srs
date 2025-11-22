@@ -6,6 +6,8 @@ import {
   signInWithPopup,
   signInWithRedirect,
   signOut as firebaseSignOut,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 
 import { auth } from "@/lib/firebase";
@@ -20,6 +22,9 @@ const isMobile = () =>
 // helper
 export async function createSession(provider: AuthProvider) {
   try {
+    // Set persistence to local to preserve login state across redirects on mobile
+    await setPersistence(auth, browserLocalPersistence);
+
     if (isMobile()) {
       // Use redirect for mobile browsers
       await signInWithRedirect(auth, provider);
