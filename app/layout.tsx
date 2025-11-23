@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <AuthInitializer />
         <Navbar />
-        {children}
+        <div className="min-h-screen">{children}</div>
         <Footer />
       </body>
     </html>

@@ -68,6 +68,8 @@ Waku-Waku-SRS is designed to help learners efficiently memorize vocabulary and k
 1. **Decks**
 
    - Modify or add chapters by editing `public/decks/{chapter}.json`.
+   - Update Deck metadata at `lib/deck-info.ts`.
+   - Due logic at `lib/dashboard-data.ts`.
 
 2. **SM-2 Logic**
 

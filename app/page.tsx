@@ -19,27 +19,40 @@ export default async function DashboardPage() {
     <div className="container mx-auto py-10">
       <header className="mb-10 space-y-2">
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-          Learn Vocabulary by smart spaced-repitions
+          Learn with Smart Spaced Repetition
         </h1>
         <p className="text-xl text-muted-foreground">
-          Unofficial companion app for Waku Waku Nihongo Textbook © Keirinkan.
-          More features coming soon!
+          Unofficial companion app for Waku Waku Nihongo Textbook © Keirinkan.{" "}
+          <br />
+          Efficiently memorize lesson vocabulary using Anki-style flashcards.
         </p>
 
         <p className="text-xl text-muted-foreground mt-4 flex gap-2 items-center">
           <CircleQuestionMark className="text-primary size-5" />
-          SM-2 Alogorithm powered Flashcards.
+          SM-2 Algorithm powered Flashcards.
         </p>
         <ul className="font-mono text-muted-foreground text-sm list-disc px-4">
           <li>
-            High frequency SM-2 Alogrithm for mastering lesson vocabulary in 5
-            days time.
+            New cards go through learning steps before graduating to spaced
+            review.
           </li>
-          <li>Study 1 lesson at a time for best efficiency.</li>
-          <li>Review 2x a day with at least 5 hour break in between.</li>
-          {/*todo: add demo link */}
           <li>
-            Video Demo: <a href="https://www.youtube.com/">[demo link]</a>
+            Review cards are scheduled automatically based on SM-2 algorithm and
+            self-scoring.
+          </li>
+          <li>
+            Manage your sessions with daily limits and sync progress at session
+            end.
+          </li>
+          <li>
+            Video Demo:{" "}
+            <a
+              href="https://www.youtube.com/"
+              target="_blank"
+              className="underline underline-offset-4"
+            >
+              Click to View
+            </a>
           </li>
         </ul>
       </header>

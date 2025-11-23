@@ -1,17 +1,12 @@
 // lib/dashboard-data.ts
 import "server-only";
 import { db } from "@/lib/firebase-admin";
+import { DECKS, DeckInfo } from "./deck-info";
 
 // --- CONFIGURATION CONSTANTS ---
 const APP_SLUG = process.env.NEXT_PUBLIC_APP_SLUG;
 
 // --- TYPE DEFINITIONS ---
-interface DeckInfo {
-  id: string;
-  title: string;
-  totalCards: number;
-}
-
 export interface DeckProgressSummary {
   chapterId: string;
   dueNowCount: number;
@@ -20,20 +15,6 @@ export interface DeckProgressSummary {
 export interface DashboardDeck extends DeckInfo {
   dueNowCount?: number;
 }
-
-// --- DECK CONTENT ---
-const DECKS: DeckInfo[] = [
-  {
-    id: "chapter-6",
-    title: "Chapter 6",
-    totalCards: 52,
-  },
-  {
-    id: "chapter-7",
-    title: "Chapter 7",
-    totalCards: 41,
-  },
-];
 
 // --- SERVER DATA FETCHING LOGIC ---
 
