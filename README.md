@@ -1,103 +1,108 @@
-# 📘 Chapter-Based Spaced Repetition System - Waku Waku Nihongo TextBook Companion
+# Waku-Waku-SRS
 
-A lightweight **SM-2–inspired** study engine (built for BJET Students primarily).  
-It helps users master a **daily quota of new cards** before moving on to the next chapter — ensuring focused, incremental progress.
-Default interval configurations are setup in a way to master all vocabulary in a chapter in 3-5 days, as per BJET class pace.
-
----
-
-## ⚙️ Core Overview
-
-> 🧭 Designed for studying each chapter in isolation.  
-> 🎯 Focused on daily mastery.  
-> 🧩 Powered by adaptive scheduling.  
-> 🔁 Reinforces recall through repetition.
+**Unofficial flashcard app for WakuWaku Nihongo Textbook by Keirinkan**.  
+Waku-Waku-SRS is designed to help learners efficiently memorize vocabulary and kanji from the textbook using a spaced repetition system (SRS) based on the **SM-2 algorithm**.
 
 ---
 
-<details>
-<summary><b>📚 1. Study Scope & Limits</b></summary>
+## 🎯 Project Goals
 
-### 🔹 Deck Isolation
-
-Study sessions are strictly confined to the **currently selected chapter/deck**.  
-Cards from other chapters are **never mixed** or shown during the session.
-
-### 🔹 Daily Target
-
-Users define a **daily limit** for introducing **new cards** (Priority 3).  
-Only this many fresh cards will appear during the current session.
-
-### 🔹 End Condition
-
-A study session ends when all newly introduced cards reach  
-`n ≥ 2` → meaning they’ve passed the `I(1) = 24h` review  
-and are scheduled for `I(2) = 72h` or longer.
-
-</details>
+- Provide a **smart flashcard system** for WakuWaku Nihongo learners.
+- Implement **Anki-style scheduling** with:
+  - Lesson steps for new cards (e.g., 10min → 1h)
+  - Standard SM-2 intervals for graduated cards.
+- Allow **daily limits** on new cards to prevent overload.
+- Support multiple sessions per day with progress synchronized across devices via **Firestore**.
 
 ---
 
-<details>
-<summary><b>🧠 2. Quality Assessment & SM2 Mapping</b></summary>
+## ⚙️ How It Works
 
-The system uses a **simplified 3-button interface**,  
-mapping each response to an SM-2 quality score (`q`)  
-and determining the immediate scheduling action.
+1. **Deck Structure**
 
-| **Button Input** | **Mapped Score (`q`)** | **n Action**            | **Scheduling Reset?** | **EF Change?**        |
-| ---------------- | ---------------------- | ----------------------- | --------------------- | --------------------- |
-| **Forgot**       | `q = 1`                | Reset → `n ← 0`         | Yes (1 minute)        | Yes (Decrease)        |
-| **Confused**     | `q = 3`                | Reset → `n ← 0`         | Yes (`I(1) = 24h`)    | Yes (Slight Decrease) |
-| **Remembered**   | `q = 5`                | Increment → `n ← n + 1` | No                    | Yes (Increase)        |
+   - Each chapter has a static JSON deck stored at `public/decks/{chapter}.json`.
+   - Decks contain key vocabulary and some bonus cards.
 
-</details>
+2. **Scheduling Algorithm**
 
----
+   - New cards go through **learning steps** before graduating to review mode.
+   - **SM-2 algorithm** manages review intervals based on self-scoring:
+     - `Again / Hard / Good / Easy`
+   - Core logic is implemented in `lib/sm2-scheduler.ts`.
 
-<details>
-<summary><b>⏰ 3. Scheduling & Reinforcement</b></summary>
+3. **Study Session**
 
-### ⏱️ Interval Unit
+   - Sessions are loaded via `hooks/useStudySession.ts`.
+   - Tracks:
+     - Current card index
+     - Queue of due cards
+     - Session completion
+     - User’s daily limit
+   - Cards marked "Again" are moved to the end of the queue.
+   - Completed sessions update Firestore via **Firebase Admin SDK**.
 
-All intervals (`I`) are measured in **hours**, including both fixed and calculated ones.
+4. **Authentication**
 
-### ⚙️ Ease Factor (EF)
+   - Users sign in with Google or GitHub.
+   - Auth handled securely via **Firebase Auth** and cookies.
 
-- Uses the **standard SM-2 EF formula** for each quality score (`q ∈ [0, 5]`).
-- EF is **bounded** to a minimum of **1.3** to prevent overly short intervals.
-
-### 📅 Fixed Initial Intervals
-
-- `I(1)` → **24 hours** (after the first success, `n = 1`)
-- `I(2)` → **72 hours** (after the second success, `n = 2`)
-
-### 📈 Growing Interval (`n ≥ 3`)
-
-- `I(n) = I(n − 1) × EF` (in hours)
-
-### 🔁 Same-Session Reinforcement
-
-Cards rated **“Forgot” (`q = 1`)** are requeued for review **1 minute later**,  
-forcing immediate repetition until successfully recalled (`q = 5`).
-
-</details>
+5. **Audio Playback**
+   - Plays Japanese pronunciation for each card.
+   - Works best in Chromium-based browsers (Chrome, Edge, etc.).
 
 ---
 
-<details>
-<summary><b>📋 4. Queue Priority (within Active Deck)</b></summary>
+## 🛠 Tech Stack
 
-The active deck’s queue is ordered by strict priority:
-
-| **Priority**       | **Description**         | **Condition**                    |
-| ------------------ | ----------------------- | -------------------------------- |
-| 🟥 **1 (Highest)** | Immediate Reinforcement | `n = 0`, failed today, due now   |
-| 🟧 **2**           | Scheduled Reviews       | `n > 0`, due now                 |
-| 🟩 **3 (Lowest)**  | New Cards               | Unseen cards (up to daily limit) |
-
-</details>
+- **Frontend:** Next.js 16, React
+- **Backend / Data:** Firebase Auth, Firestore, Firebase Admin SDK
+- **Scheduling:** SM-2 Algorithm (`lib/sm2-scheduler.ts`)
+- **Hooks:** `useStudySession.ts` handles session logic
+- **Styling:** Tailwind CSS
+- **Icons:** Lucide React
 
 ---
 
-> 💡 _“Depth before breadth — master today’s cards before moving forward.”_
+## 🔧 Customization & Contributions
+
+1. **Decks**
+
+   - Modify or add chapters by editing `public/decks/{chapter}.json`.
+
+2. **SM-2 Logic**
+
+   - Adjust learning steps, intervals, or scoring in `lib/sm2-scheduler.ts`.
+
+3. **Session Behavior**
+
+   - Change how the daily limit works or session flow in `hooks/useStudySession.ts`.
+
+4. **Audio**
+
+   - Audio playback relies on the Web Speech API (`speechSynthesis`) in browsers.
+   - Improve cross-browser support by integrating external TTS if needed.
+
+5. **Contributions**
+   - Fork the repository for your own use case.
+   - Open a pull request with improvements or new decks.
+
+---
+
+## ⚡ Notes
+
+- Daily limit prevents new cards from overwhelming the user but **due cards are always included**, so repeated sessions may include previously studied cards.
+- Changing limit is not required to start studying a new session on the same day. Limit only defines the number of possible new cards for a single session.
+- Avoid Starting too many sessions a day or decrease the limit (default 20) to prevent having too many due.
+- Session completion is determined dynamically based on the current queue of due cards and new cards.
+- Progress syncing ensures **cross-device continuity** via Firestore.
+- Progress syncing occurs at session completion only, otherwise progress is saved locally. **Complete sessions to keep Progress!**
+
+---
+
+## 📄 License
+
+This project is open for personal and educational use. Contributions are welcome.
+
+---
+
+> **Disclaimer:** This app is **unofficial** and not affiliated with Keirinkan. Use it at your own discretion for study purposes.
