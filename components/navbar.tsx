@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import SignInDialog from "@/components/SignInDialog";
+import { SettingsModal } from "@/components/SettingsModal";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
@@ -10,6 +12,7 @@ import { signOutAndClearSession } from "@/lib/auth-client";
 
 const Navbar = () => {
   const { user, loading } = useAuth();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -37,9 +40,12 @@ const Navbar = () => {
           </Link>
           <menu className="flex gap-4 items-center">
             <li>
-              <Button variant={"outline"} aria-label="Settings">
+              <Button
+                variant={"outline"}
+                onClick={() => setSettingsOpen(true)}
+                aria-label="Settings"
+              >
                 <Settings />
-                {/*Todo: open modal to increase daily new word limit and option to clear all study progress */}
               </Button>
             </li>
             <li>
@@ -72,6 +78,7 @@ const Navbar = () => {
           <>Log in to track your progress and start studying!</>
         )}
       </div>
+      <SettingsModal open={settingsOpen} onOpenChange={setSettingsOpen} />
     </header>
   );
 };
