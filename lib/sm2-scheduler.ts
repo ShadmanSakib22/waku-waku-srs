@@ -1,146 +1,236 @@
 // lib/sm2-scheduler.ts
 /**
- * SM-2 Scheduling (MVP) for rapid chapter completion
+ * SM-2 Scheduler with Anki-Style Learning Steps
  *
- * Goals:
- * - Help users learn entire chapter within ~3 days (50-80 words typical).
- * - Simple, deterministic scheduling suitable for MVP.
- * - Daily new card limit computed from chapter size.
- * - Cap immediate requeues to avoid infinite rapid repeats.
+ * Implements:
+ * - Learning steps for new cards (e.g., 10m → 1h)
+ * - Hard/Again/Good/Easy scores (for self-scoring)
+ * - SM-2 scheduling for graduated cards
  *
- * Notes:
- * - All intervals are expressed in hours (and stored as hours in CardState.lastInterval).
- * - nextReview is a Unix timestamp in milliseconds.
+ * Learning mode follows Anki conventions:
+ * Again: restart learning at step 0
+ * Hard: remain in current step with extended delay
+ * Good: advance to next learning step
+ * Easy: immediate graduation into review mode
+ *
+ * Review mode follows SM-2:
+ * q < 3: lapse → return to learning step 0
+ * q ≥ 3: interval increases according to EF and repetition count
  */
 
 /* ----------------------- TYPES ----------------------- */
+
 export interface CardState {
   cardId: string;
+
+  // SM-2 scheduling fields
   easeFactor: number;
   repetitions: number;
-  lastInterval: number; // hours
-  nextReview: number; // unix ms
+  lastInterval: number; // days
+
+  // Learning-state fields
+  isLearning: boolean;
+  learningStepIndex: number;
+
+  nextReview: number; // ms timestamp
 }
 
-/* --------------------- CONFIG ------------------------ */
+/* ----------------------- CONFIG ----------------------- */
+
+// EF defaults per SM-2
 const DEFAULT_EF = 2.5;
 const MIN_EF = 1.3;
 
-// High-frequency base intervals (hours)
-const I1_HOURS = 5; // first successful repetition
-const I2_HOURS = 48; // second successful repetition
+// Learning steps (in minutes)
+// This ensures "Again" cards appear back in 1 minute.
+const LEARNING_STEPS = [1, 10];
 
-// Immediate requeue cap: when user fails (q < 3) we requeue soon but not instantly.
-// Use a short delay to allow cognitive reset (in minutes converted to hours).
-const IMMEDIATE_REQUEUE_MINUTES = 10;
-const IMMEDIATE_REQUEUE_HOURS = IMMEDIATE_REQUEUE_MINUTES / 60;
+// Hard button multiplier during learning
+const HARD_LEARNING_MULTIPLIER = 1.2;
 
-// Maximum number of immediate requeues we allow for a card within its stored state
-// We do not persist a per-session counter here (kept simple) — this cap prevents
-// nextReview being set to 'now' which may cause tight loops.
-const CAP_IMMEDIATE_REQUEUE = true;
+/* ---------------------- HELPERS ----------------------- */
 
-/* --------------------- HELPERS ----------------------- */
-
-function clampEF(ef: number) {
-  if (ef < MIN_EF) return MIN_EF;
-  return Math.round(ef * 100) / 100;
+function clampEF(ef: number): number {
+  return Math.max(MIN_EF, Math.round(ef * 100) / 100);
 }
 
 /**
- * Calculate new Ease Factor using SM-2 formula variant.
- * EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+ * SM-2 ease factor update function.
+ * Source: SuperMemo-2 specification.
  */
-function calculateEF(currentEF: number, quality: number) {
+function calculateEF(currentEF: number, quality: number): number {
   const q = Math.max(0, Math.min(5, quality));
   const newEF = currentEF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02));
   return clampEF(newEF);
 }
 
 /**
- * Calculate next interval (hours) based on repetition count.
+ * SM-2 interval progression logic.
+ * Uses:
+ * 1 day → 6 days → EF growth
  */
-function calculateInterval(
-  repetitions: number,
+function calculateSM2Interval(
+  reps: number,
   ef: number,
   lastInterval: number
-) {
-  if (repetitions === 1) return I1_HOURS;
-  if (repetitions === 2) return I2_HOURS;
-  // For n > 2
-  const next = lastInterval * ef;
-  return Math.ceil(next);
+): number {
+  if (reps === 1) return 1;
+  if (reps === 2) return 6;
+  return Math.round(lastInterval * ef);
 }
 
-/**
- * Compute a daily new-card limit given a chapter size and target days.
- * Default targetDays = 5 to finish chapter in ~5 days.
- */
-export function computeDailyNewLimit(chapterSize: number, targetDays = 5) {
-  if (!chapterSize || chapterSize <= 0) return 1;
-  return Math.max(1, Math.ceil(chapterSize / targetDays));
+/* ------------------ INITIALIZATION -------------------- */
+
+export function initializeNewCard(cardId: string): CardState {
+  return {
+    cardId,
+    easeFactor: DEFAULT_EF,
+    repetitions: 0,
+    lastInterval: 0,
+    isLearning: true,
+    learningStepIndex: 0,
+    nextReview: 0,
+  };
 }
 
-/* -------------------- MAIN LOGIC --------------------- */
-
+/* ---------------------- SCHEDULER ---------------------- */
 /**
- * Initialize a new card's progress state.
- */
-export const initializeNewCard = (cardId: string): CardState => ({
-  cardId,
-  easeFactor: DEFAULT_EF,
-  repetitions: 0,
-  lastInterval: 0,
-  nextReview: 0, // 0 indicates new/unseen
-});
-
-/**
- * Process a review and return updated CardState.
- * - quality: 0..5 (SM-2 scale)
+ * Unified review handler for learning and review cards.
  *
- * Behavior notes (MVP):
- * - q < 3: reset repetitions to 0, set short requeue (IMMEDIATE_REQUEUE_MINUTES) to allow quick reattempt.
- *   This prevents infinite immediate requeues by using a short delay instead of 'now'.
- * - q >= 3: increment repetitions and compute next interval using EF.
- * - EF is updated on every review per SM-2 formula.
- *
- * The function is deterministic and side-effect free.
+ * quality values:
+ * 0 = Again
+ * 1 = Hard
+ * 2 = Good
+ * 3 = Easy
  */
-export const processReview = (
-  current: CardState,
-  quality: number
-): CardState => {
+export function processReview(current: CardState, quality: number): CardState {
   const now = Date.now();
-  const currentEF =
-    typeof current.easeFactor === "number" ? current.easeFactor : DEFAULT_EF;
-  const ef = calculateEF(currentEF, quality);
+  const ef = calculateEF(current.easeFactor, quality);
 
-  let newRepetitions = current.repetitions;
-  let nextIntervalHours = current.lastInterval;
+  /* ------------------------------------------------------
+   * Learning Mode
+   * ------------------------------------------------------ */
+  if (current.isLearning) {
+    const step = current.learningStepIndex;
 
-  if (quality < 3) {
-    // Failure: reset repetitions and assign a short requeue window
-    newRepetitions = 0;
-    nextIntervalHours = CAP_IMMEDIATE_REQUEUE
-      ? Math.max(0.1, IMMEDIATE_REQUEUE_HOURS)
-      : 0;
-  } else {
-    // Success: increment repetitions and compute interval
-    newRepetitions = (current.repetitions ?? 0) + 1;
-    nextIntervalHours = calculateInterval(
-      newRepetitions,
-      ef,
-      current.lastInterval || I1_HOURS
-    );
+    switch (quality) {
+      case 0: // Again (Score 1 in UI)
+      case 1: {
+        // Map Score 1 to Case 0 behavior if passed incorrectly, but usually:
+        // Score 1 (Again) -> quality 1? No, usually mapped 1->1.
+        // Wait, UI sends scores 1,3,4,5.
+        // SM-2 usually uses 0-5.
+        // Let's assume input 'quality' is the raw score from UI (1,3,4,5)
+
+        // If input is 1 (Again):
+        if (quality <= 1) {
+          // Again: restart learning from first step
+          const delay = LEARNING_STEPS[0];
+          return {
+            ...current,
+            easeFactor: ef,
+            learningStepIndex: 0,
+            nextReview: now + delay * 60 * 1000,
+          };
+        }
+        break;
+        // Fallthrough is tricky with switch/if mix. Let's strictly stick to logic below.
+      }
+    }
+
+    // Re-implementing switch to handle specific UI scores safely
+    // UI Sends: 1 (Again), 3 (Hard), 4 (Good), 5 (Easy)
+
+    if (quality === 1) {
+      // Again
+      const delay = LEARNING_STEPS[0];
+      return {
+        ...current,
+        easeFactor: ef,
+        learningStepIndex: 0,
+        nextReview: now + delay * 60 * 1000,
+      };
+    }
+
+    if (quality === 3) {
+      // Hard
+      const base = LEARNING_STEPS[step];
+      const delay = Math.round(base * HARD_LEARNING_MULTIPLIER);
+      return {
+        ...current,
+        easeFactor: ef,
+        learningStepIndex: step,
+        nextReview: now + delay * 60 * 1000,
+      };
+    }
+
+    if (quality === 4) {
+      // Good
+      const nextStep = step + 1;
+
+      if (nextStep < LEARNING_STEPS.length) {
+        const delay = LEARNING_STEPS[nextStep];
+        return {
+          ...current,
+          easeFactor: ef,
+          learningStepIndex: nextStep,
+          nextReview: now + delay * 60 * 1000,
+        };
+      }
+
+      // Graduation
+      const interval = 1;
+      return {
+        ...current,
+        easeFactor: ef,
+        isLearning: false,
+        repetitions: 1,
+        lastInterval: interval,
+        learningStepIndex: 0,
+        nextReview: now + interval * 24 * 60 * 60 * 1000,
+      };
+    }
+
+    if (quality >= 5) {
+      // Easy
+      const interval = 4;
+      return {
+        ...current,
+        easeFactor: ef,
+        isLearning: false,
+        repetitions: 1,
+        lastInterval: interval,
+        learningStepIndex: 0,
+        nextReview: now + interval * 24 * 60 * 60 * 1000,
+      };
+    }
   }
 
-  const nextReviewMs = now + Math.round(nextIntervalHours * 60 * 60 * 1000);
+  /* ------------------------------------------------------
+   * Review Mode (SM-2)
+   * ------------------------------------------------------ */
+  if (quality < 3) {
+    // Lapse: return to learning state, step 0
+    return {
+      ...current,
+      easeFactor: ef,
+      isLearning: true,
+      repetitions: 0,
+      lastInterval: 0,
+      learningStepIndex: 0,
+      nextReview: now + LEARNING_STEPS[0] * 60 * 1000,
+    };
+  }
+
+  // Successful review
+  const newReps = current.repetitions + 1;
+  const interval = calculateSM2Interval(newReps, ef, current.lastInterval || 1);
 
   return {
     ...current,
     easeFactor: ef,
-    repetitions: newRepetitions,
-    lastInterval: nextIntervalHours,
-    nextReview: nextReviewMs,
+    repetitions: newReps,
+    lastInterval: interval,
+    nextReview: now + interval * 24 * 60 * 60 * 1000,
   };
-};
+}

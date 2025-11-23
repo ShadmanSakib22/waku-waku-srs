@@ -4,23 +4,25 @@ import "server-only";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/firebase-admin";
 import { getCurrentUser } from "@/lib/auth-server";
-import { CardState } from "@/lib/sm2-scheduler"; // For type-checking the payload
+import { CardState } from "@/lib/sm2-scheduler";
 
 const APP_SLUG = process.env.NEXT_PUBLIC_APP_SLUG;
 
 /**
- * Validates that a CardState object contains valid SM-2 values.
- * @param progress The progress object to validate.
- * @returns An error message if invalid, or null if valid.
+ * Validates a CardState object before saving.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function validateCardProgress(progress: any): string | null {
-  // Validate easeFactor
-  if (typeof progress.easeFactor !== "number" || progress.easeFactor < 1.3) {
-    return `Invalid: easeFactor must be a number >= 1.3, got ${progress.easeFactor}.`;
+  if (!progress || typeof progress !== "object") {
+    return "Invalid: progress payload must be an object.";
   }
 
-  // Validate repetitions
+  // easeFactor
+  if (typeof progress.easeFactor !== "number" || progress.easeFactor < 1.3) {
+    return `Invalid: easeFactor must be >= 1.3, got ${progress.easeFactor}.`;
+  }
+
+  // repetitions (>= 0 integer)
   if (
     typeof progress.repetitions !== "number" ||
     progress.repetitions < 0 ||
@@ -29,111 +31,114 @@ function validateCardProgress(progress: any): string | null {
     return `Invalid: repetitions must be a non-negative integer, got ${progress.repetitions}.`;
   }
 
-  // Validate lastInterval (can be 0 for new/failed cards)
+  // lastInterval (>= 0, days)
   if (typeof progress.lastInterval !== "number" || progress.lastInterval < 0) {
-    return `Invalid: lastInterval must be a non-negative number, got ${progress.lastInterval}.`;
+    return `Invalid: lastInterval must be a number >= 0, got ${progress.lastInterval}.`;
   }
 
-  // Validate nextReview (Unix timestamp in milliseconds)
+  // nextReview (timestamp)
   if (typeof progress.nextReview !== "number" || progress.nextReview < 0) {
-    return `Invalid: nextReview must be a non-negative timestamp, got ${progress.nextReview}.`;
+    return `Invalid: nextReview must be a valid timestamp, got ${progress.nextReview}.`;
+  }
+
+  // isLearning (boolean)
+  if (typeof progress.isLearning !== "boolean") {
+    return `Invalid: isLearning must be boolean, got ${progress.isLearning}.`;
+  }
+
+  // learningStepIndex (>= 0 integer)
+  if (
+    typeof progress.learningStepIndex !== "number" ||
+    progress.learningStepIndex < 0 ||
+    !Number.isInteger(progress.learningStepIndex)
+  ) {
+    return `Invalid: learningStepIndex must be a non-negative integer, got ${progress.learningStepIndex}.`;
   }
 
   return null; // Valid
 }
 
 export async function POST(request: NextRequest) {
-  // --- 1. Authentication ---
-  // Use the helper to securely verify the session cookie and get the user.
+  // 1. Auth
   const user = await getCurrentUser();
   if (!user) {
     return new Response(
-      JSON.stringify({
-        message: "Unauthenticated. Please sign in to save progress.",
-      }),
+      JSON.stringify({ message: "Unauthenticated. Please sign in." }),
       { status: 401, headers: { "Content-Type": "application/json" } }
     );
   }
-  const authenticatedUserId = user.uid;
 
-  // --- 2. Input Validation and Parsing ---
-  let payload: { cardId: string; chapterId: string; progress: CardState };
+  const uid = user.uid;
+
+  // 2. Parse
+  let payload: {
+    cardId: string;
+    chapterId: string;
+    progress: CardState;
+  };
+
   try {
-    const json = await request.json();
-    payload = json;
-  } catch (error) {
-    console.log(error);
+    payload = await request.json();
+  } catch {
     return new Response(
-      JSON.stringify({ message: "Invalid JSON format in request body." }),
+      JSON.stringify({ message: "Request body must be valid JSON." }),
       { status: 400, headers: { "Content-Type": "application/json" } }
     );
   }
 
   const { cardId, chapterId, progress } = payload;
 
-  const validationError = validateCardProgress(progress);
-  if (validationError) {
-    return new Response(JSON.stringify({ message: validationError }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-
-  if (
-    !chapterId ||
-    typeof chapterId !== "string" ||
-    !cardId ||
-    typeof cardId !== "string"
-  ) {
+  // 3. Validate
+  if (!cardId || !chapterId) {
     return new Response(
       JSON.stringify({
-        message: "Missing required 'chapterId' or 'cardId' in payload.",
+        message: "Missing required 'cardId' or 'chapterId'.",
       }),
       { status: 400, headers: { "Content-Type": "application/json" } }
     );
   }
 
-  // --- 3. Firestore Write Operation (Admin SDK) ---
+  const err = validateCardProgress(progress);
+  if (err) {
+    return new Response(JSON.stringify({ message: err }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  // 4. Save to Firestore
   try {
-    // Path: /artifacts/{APP_SLUG}/users/{uid}/{chapterId}_progress/{cardId}
-    const docPath = `artifacts/${APP_SLUG}/users/${authenticatedUserId}/${chapterId}_progress/${cardId}`;
+    const docPath = `artifacts/${APP_SLUG}/users/${uid}/${chapterId}_progress/${cardId}`;
     const docRef = db.doc(docPath);
 
-    // Prepare data to ensure only the necessary SM-2 fields are saved
     const dataToSave: CardState = {
-      cardId: cardId, // for path integrity check
+      cardId,
       easeFactor: progress.easeFactor,
       repetitions: progress.repetitions,
       lastInterval: progress.lastInterval,
       nextReview: progress.nextReview,
+      isLearning: progress.isLearning,
+      learningStepIndex: progress.learningStepIndex,
     };
 
-    // Update progress fields
     await docRef.set(dataToSave, { merge: true });
 
     return new Response(
       JSON.stringify({
-        message: "Progress saved successfully.",
-        cardId: cardId,
-        nextReview: new Date(progress.nextReview).toISOString(),
+        message: "Progress saved.",
+        nextReviewISO: new Date(progress.nextReview).toISOString(),
       }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
+      { status: 200, headers: { "Content-Type": "application/json" } }
     );
-  } catch (error) {
-    console.error("Firestore write failed:", error);
+  } catch (err) {
+    console.error("Firestore write failed:", err);
     return new Response(
-      JSON.stringify({
-        message: "Server failed to save progress. Please check logs.",
-      }),
+      JSON.stringify({ message: "Failed to write progress." }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }
 
-// Reject other HTTP methods
 export async function GET() {
   return new Response(null, { status: 405 });
 }

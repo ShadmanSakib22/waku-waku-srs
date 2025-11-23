@@ -1,314 +1,303 @@
-// hooks/useStudySession.ts
-import { create } from "zustand";
+"use client";
+
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { collection, doc, onSnapshot, getFirestore } from "firebase/firestore";
+import useAuth from "@/hooks/useAuth";
 import {
   processReview,
   initializeNewCard,
-  computeDailyNewLimit,
   CardState,
 } from "@/lib/sm2-scheduler";
-import { collection, onSnapshot, Timestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 
-const APP_SLUG = process.env.NEXT_PUBLIC_APP_SLUG ?? "flashcard-app";
-const API_WRITE_ROUTE = "/api/review-progress";
+const firestore = getFirestore();
+const LOCAL_KEY = "pending-progress-v1";
 
-/* -------------------------------------------------------------------------- */
-/* TYPES                                   */
-/* -------------------------------------------------------------------------- */
 export interface CardContent {
   id: string;
   kanji: string;
   romaji: string;
   description: string;
-  chapterId: string;
 }
 
-export interface StudyCard extends CardContent, CardState {}
-
-interface StudySessionState {
-  activeChapterId: string | null;
-  dailyNewCardLimit: number;
-  currentUserId: string | null;
-  staticDeckContent: CardContent[];
-  allChapterCards: StudyCard[];
-  reviewQueue: StudyCard[];
-  currentCardIndex: number;
-  isSessionActive: boolean;
-  isSessionComplete: boolean;
-  loading: boolean;
-  error: string | null;
-  isCardFlipped: boolean;
-  reviewScore: number;
-  newCardsServedToday: number;
-  nextReviewTime: number | null;
-  isSubmitting: boolean;
-
-  // Internal unsubscribe reference
-  _unsubscribe: (() => void) | null;
-
-  // actions
-  setChapter: (chapterId: string) => void;
-  setReviewScore: (score: number) => void;
-  setDeckContent: (content: CardContent[]) => void;
-  initializeSession: (
-    userId: string,
-    chapterId: string,
-    staticDeckContent: CardContent[]
-  ) => () => void;
-  handleReview: (score: number) => Promise<void>;
-  flipCard: () => void;
-  nextCard: () => void;
-  assembleQueue: () => void;
+interface UseStudySessionOptions {
+  chapterId?: string;
+  allCards?: CardContent[];
 }
 
-/* -------------------------------------------------------------------------- */
-/* HELPERS                                  */
-/* -------------------------------------------------------------------------- */
+export function useStudySession(options?: UseStudySessionOptions) {
+  const { chapterId, allCards } = options || {};
+  const { user } = useAuth();
 
-// 1. Helper to safely convert Firestore timestamps or numbers to milliseconds
-const toMilliseconds = (value: unknown): number => {
-  if (value instanceof Timestamp) return value.toMillis();
-  if (typeof value === "number") return value;
-  if (typeof value === "string" && /^\d+$/.test(value)) return Number(value);
-  return 0;
-};
+  /** ---------- STATE ---------- */
+  const [firestoreProgress, setFirestoreProgress] = useState<
+    Record<string, CardState>
+  >({});
+  const [dailyLimitState, setDailyLimitState] = useState<number>(20);
+  const [loading, setLoading] = useState(true);
+  const [now, setNow] = useState(() => Date.now());
 
-// 2. Helper to prepare values for Firestore (just passes the number through)
-const toFirestoreValue = (ms: number): number => ms;
+  // Session state
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [isCardFlipped, setIsCardFlipped] = useState(false);
+  const [isSessionActive, setIsSessionActive] = useState(false);
+  const [isSessionComplete, setIsSessionComplete] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-// 3. Shuffle helper
-function shuffle<T>(arr: T[]): T[] {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+  // Repeat queue for “Again” cards
+  const [repeatQueue, setRepeatQueue] = useState<string[]>([]);
 
-/* -------------------------------------------------------------------------- */
-/* STORE                                   */
-/* -------------------------------------------------------------------------- */
+  /** ---------- TICKING CLOCK ---------- */
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
 
-export const useStudySession = create<StudySessionState>((set, get) => ({
-  activeChapterId: null,
-  dailyNewCardLimit: 0,
-  currentUserId: null,
-  staticDeckContent: [],
-  allChapterCards: [],
-  reviewQueue: [],
-  currentCardIndex: 0,
-  isSessionActive: false,
-  isSessionComplete: false,
-  loading: false,
-  error: null,
-  isCardFlipped: false,
-  reviewScore: 5,
-  newCardsServedToday: 0,
-  nextReviewTime: null,
-  isSubmitting: false,
-  _unsubscribe: null,
-
-  setChapter: (chapterId: string) =>
-    set({
-      activeChapterId: chapterId,
-      isSessionComplete: false,
-      error: null,
-      newCardsServedToday: 0,
-      nextReviewTime: null,
-    }),
-
-  setReviewScore: (score: number) => set({ reviewScore: score }),
-
-  setDeckContent: (content: CardContent[]) =>
-    set({
-      staticDeckContent: content,
-      dailyNewCardLimit: computeDailyNewLimit(content.length),
-    }),
-
-  flipCard: () => set((s) => ({ isCardFlipped: !s.isCardFlipped })),
-
-  nextCard: () =>
-    set((state) => {
-      const newIndex = state.currentCardIndex + 1;
-      const isComplete = newIndex >= state.reviewQueue.length;
-
-      // Recalculate next review time if complete
-      const nextReviewTime = isComplete
-        ? (() => {
-            const now = Date.now();
-            const futureReviews = state.allChapterCards
-              .filter((card) => card.nextReview > now)
-              .map((card) => card.nextReview);
-            return futureReviews.length > 0 ? Math.min(...futureReviews) : null;
-          })()
-        : null;
-
-      return {
-        currentCardIndex: isComplete ? state.currentCardIndex : newIndex,
-        isCardFlipped: false,
-        reviewScore: 5,
-        isSessionActive: !isComplete,
-        isSessionComplete: isComplete,
-        nextReviewTime,
-      };
-    }),
-
-  assembleQueue: () => {
-    const s = get();
-    const now = Date.now();
-    const allCards = s.allChapterCards;
-
-    // Guard against assembling empty decks
-    if (allCards.length === 0) return;
-
-    const dailyLimit =
-      s.dailyNewCardLimit || computeDailyNewLimit(s.staticDeckContent.length);
-
-    const dueCards: StudyCard[] = [];
-    const newCards: StudyCard[] = [];
-
-    for (const card of allCards) {
-      const isUnstarted = card.nextReview === 0 && card.repetitions === 0;
-      const isDue = card.nextReview <= now && card.nextReview !== 0;
-
-      if (isDue) dueCards.push(card);
-      else if (isUnstarted) newCards.push(card);
-    }
-
-    const queueDue = shuffle(dueCards);
-    const allowedNewSlots = Math.max(0, dailyLimit - s.newCardsServedToday);
-    const queueNew = shuffle(newCards).slice(0, allowedNewSlots);
-    const combined = shuffle([...queueDue, ...queueNew]);
-    const isComplete = combined.length === 0;
-
-    set({
-      reviewQueue: combined,
-      currentCardIndex: 0,
-      isSessionComplete: isComplete,
-      isSessionActive: combined.length > 0,
-      loading: false,
-      error: null,
+  /** ---------- REALTIME DAILY LIMIT LISTENER ---------- */
+  useEffect(() => {
+    if (!user) return;
+    const prefRef = doc(
+      firestore,
+      `artifacts/${process.env.NEXT_PUBLIC_APP_SLUG}/users/${user.uid}/preferences/study`
+    );
+    const unsub = onSnapshot(prefRef, (snap) => {
+      if (!snap.exists()) return;
+      const data = snap.data();
+      setDailyLimitState(data.dailyNewCardLimit ?? 20);
     });
-  },
+    return unsub;
+  }, [user]);
 
-  initializeSession: (userId, chapterId, staticDeckContent) => {
-    const state = get();
+  /** ---------- REALTIME PROGRESS LISTENER ---------- */
+  useEffect(() => {
+    if (!user || !chapterId) return;
 
-    // Clean up existing listener if changing contexts
-    if (state._unsubscribe) {
-      state._unsubscribe();
-    }
-
-    // Cache static deck immediately
-    const dailyLimit = computeDailyNewLimit(staticDeckContent.length);
-
-    set({
-      loading: true,
-      activeChapterId: chapterId,
-      currentUserId: userId,
-      staticDeckContent,
-      dailyNewCardLimit: dailyLimit,
-      newCardsServedToday: 0,
-      error: null,
-      nextReviewTime: null,
-    });
-
-    const progressCollectionPath = `artifacts/${APP_SLUG}/users/${userId}/${chapterId}_progress`;
-    const progressCollectionRef = collection(db, progressCollectionPath);
-
-    const unsubscribe = onSnapshot(
-      progressCollectionRef,
-      (snapshot) => {
-        // 1. Process Data
-        const userProgressMap = new Map<string, CardState>();
-        snapshot.docs.forEach((doc) => {
-          const data = doc.data();
-          if (data?.cardId) {
-            userProgressMap.set(String(data.cardId), {
-              cardId: String(data.cardId),
-              easeFactor: Number(data.easeFactor ?? 2.5),
-              repetitions: Number(data.repetitions ?? 0),
-              lastInterval: Number(data.lastInterval ?? 0),
-              nextReview: toMilliseconds(data.nextReview ?? 0),
-            });
-          }
-        });
-
-        const merged: StudyCard[] = staticDeckContent.map((content) => ({
-          ...content,
-          ...(userProgressMap.get(content.id) ?? initializeNewCard(content.id)),
-        }));
-
-        // 2. Update State
-        set({ allChapterCards: merged, loading: false, error: null });
-
-        // 3. Only assemble queue if the session is NOT active yet.
-        if (!get().isSessionActive && !get().isSessionComplete) {
-          get().assembleQueue();
-        }
-      },
-      (error) => {
-        console.error("Firestore error:", error);
-        set({ loading: false, error: "Failed to load study progress." });
-      }
+    const colRef = collection(
+      firestore,
+      `artifacts/${process.env.NEXT_PUBLIC_APP_SLUG}/users/${user.uid}/${chapterId}_progress`
     );
 
-    set({ _unsubscribe: unsubscribe });
-    return unsubscribe;
-  },
+    const unsub = onSnapshot(colRef, (snap) => {
+      const obj: Record<string, CardState> = {};
+      snap.forEach((doc) => {
+        obj[doc.id] = doc.data() as CardState;
+      });
+      setFirestoreProgress(obj);
+      setLoading(false);
+    });
 
-  handleReview: async (score: number) => {
-    set({ isSubmitting: true });
-    const state = get();
-    const currentCard = state.reviewQueue[state.currentCardIndex];
-    const activeChapterId = state.activeChapterId;
-    const userId = state.currentUserId;
+    return unsub;
+  }, [user, chapterId]);
 
-    if (!currentCard || !activeChapterId || !userId) {
-      set({ error: "Missing session data.", isSubmitting: false });
+  /** ---------- LOCAL STORAGE HELPERS ---------- */
+  const loadPendingLocal = useCallback(() => {
+    try {
+      return JSON.parse(localStorage.getItem(LOCAL_KEY) || "{}");
+    } catch {
+      return {};
+    }
+  }, []);
+
+  const savePendingLocal = useCallback((obj: Record<string, CardState>) => {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(obj));
+  }, []);
+
+  /** ---------- QUEUE BUILDER ---------- */
+  const queue = useMemo(() => {
+    if (loading || !allCards) return [];
+
+    const q: string[] = [];
+
+    // 1. Due review cards (SM-2)
+    for (const card of allCards) {
+      const prog = firestoreProgress[card.id];
+      if (prog && !prog.isLearning && prog.nextReview <= now) q.push(card.id);
+    }
+
+    // 2. Learning cards (in-progress)
+    for (const card of allCards) {
+      const prog = firestoreProgress[card.id];
+      if (
+        prog &&
+        prog.isLearning &&
+        prog.nextReview <= now &&
+        !q.includes(card.id)
+      ) {
+        q.push(card.id);
+      }
+    }
+
+    // 3. New cards
+    const newCards = allCards.filter(
+      (c) => !firestoreProgress[c.id] && !q.includes(c.id)
+    );
+    const eligible = newCards.slice(0, dailyLimitState);
+    q.push(...eligible.map((c) => c.id));
+
+    // 4. RepeatQueue cards at the end
+    q.push(...repeatQueue.filter((id) => !q.includes(id)));
+
+    return q;
+  }, [firestoreProgress, allCards, dailyLimitState, now, loading, repeatQueue]);
+
+  /** ---------- GET NEXT CARD ---------- */
+  const getNextCard = useCallback((): CardContent | null => {
+    if (queue.length === 0 || !allCards) return null;
+    const nextId = queue[0];
+    return allCards.find((c) => c.id === nextId) || null;
+  }, [queue, allCards]);
+
+  /** ---------- SUBMIT REVIEW ---------- */
+  const submitReview = useCallback(
+    async (cardId: string, quality: number) => {
+      if (!user || !chapterId) return;
+
+      const current = firestoreProgress[cardId] || initializeNewCard(cardId);
+      const updated = processReview(current, quality);
+
+      // Save to local pending
+      const pending = loadPendingLocal();
+      pending[cardId] = updated;
+      savePendingLocal(pending);
+
+      // Update state for instant UI
+      setFirestoreProgress((p) => ({
+        ...p,
+        [cardId]: updated,
+      }));
+
+      // Force queue refresh
+      setNow(Date.now());
+    },
+    [user, chapterId, firestoreProgress, loadPendingLocal, savePendingLocal]
+  );
+
+  /** ---------- FLUSH LOCAL PENDING TO FIRESTORE ---------- */
+  const flushPendingToFirestore = useCallback(async () => {
+    if (!user || !chapterId) return;
+
+    const pending = loadPendingLocal();
+    const keys = Object.keys(pending);
+    if (keys.length === 0) return;
+
+    const results = await Promise.allSettled(
+      keys.map((cardId) =>
+        fetch("/api/review-progress", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            cardId,
+            chapterId,
+            progress: pending[cardId],
+          }),
+        }).then((res) => {
+          if (!res.ok) throw new Error(`Failed to save ${cardId}`);
+          return res.json();
+        })
+      )
+    );
+
+    const failed = results.filter((r) => r.status === "rejected");
+    if (failed.length > 0) {
+      console.error("Failed to save some progress:", failed);
       return;
     }
 
-    // Calculate new state purely locally first
-    const newCardState = processReview(currentCard, score);
+    localStorage.removeItem(LOCAL_KEY);
+  }, [user, chapterId, loadPendingLocal]);
 
-    // Prepare payload
-    const payload = {
-      chapterId: activeChapterId,
-      cardId: newCardState.cardId,
-      progress: {
-        cardId: newCardState.cardId,
-        easeFactor: newCardState.easeFactor,
-        repetitions: newCardState.repetitions,
-        lastInterval: newCardState.lastInterval,
-        nextReview: toFirestoreValue(newCardState.nextReview),
-      },
-    };
+  /** ---------- SET DAILY LIMIT ---------- */
+  const setDailyLimit = useCallback(
+    async (value: number) => {
+      setDailyLimitState(value);
+      await flushPendingToFirestore();
 
-    try {
-      const res = await fetch(API_WRITE_ROUTE, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      if (!user?.uid) return;
 
-      if (!res.ok) throw new Error("Failed to save");
-
-      // Check race condition before advancing
-      const currentState = get();
-      if (currentState.currentCardIndex === state.currentCardIndex) {
-        // If it was a new card, count it
-        if (currentCard.repetitions === 0 && newCardState.repetitions > 0) {
-          set((s) => ({ newCardsServedToday: s.newCardsServedToday + 1 }));
-        }
-        get().nextCard();
+      try {
+        await fetch("/api/user-preferences", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dailyNewCardLimit: value }),
+        });
+      } catch (err) {
+        console.error("Failed to save daily limit:", err);
       }
-    } catch (err) {
-      console.error(err);
-      set({ error: "Save failed. Please try again." });
-    } finally {
-      set({ isSubmitting: false });
-    }
-  },
-}));
+    },
+    [user, flushPendingToFirestore]
+  );
+
+  /** ---------- SESSION MANAGEMENT ---------- */
+  const initializeSession = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (_userId: string, _chapterId: string, _cards: CardContent[]) => {
+      setIsSessionActive(true);
+      setCurrentCardIndex(0);
+      setIsCardFlipped(false);
+      setIsSessionComplete(false);
+      setError(null);
+      setRepeatQueue([]);
+
+      return () => {
+        setIsSessionActive(false);
+      };
+    },
+    []
+  );
+
+  const flipCard = useCallback(() => setIsCardFlipped(true), []);
+
+  const handleReview = useCallback(
+    async (score: number) => {
+      const currentCardId = queue[currentCardIndex];
+      if (!currentCardId) return;
+
+      setIsSubmitting(true);
+      try {
+        await submitReview(currentCardId, score);
+
+        if (score === 1) {
+          // Move “Again” card to end of repeatQueue
+          setRepeatQueue((q) => [...q, currentCardId]);
+          setIsCardFlipped(false);
+          return;
+        }
+
+        // Advance index or finish session
+        if (currentCardIndex + 1 >= queue.length) {
+          setIsSessionComplete(true);
+          setIsSessionActive(false);
+          await flushPendingToFirestore();
+        } else {
+          setCurrentCardIndex((i) => i + 1);
+          setIsCardFlipped(false);
+        }
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Unknown error");
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [queue, currentCardIndex, submitReview, flushPendingToFirestore]
+  );
+
+  return {
+    loading: loading || !user,
+    queue,
+    getNextCard,
+    submitReview,
+    flushPendingToFirestore,
+    dailyLimit: dailyLimitState,
+    setDailyLimit,
+    currentCardIndex,
+    reviewQueue: queue,
+    isCardFlipped,
+    error,
+    isSessionActive,
+    isSessionComplete,
+    isSubmitting,
+    initializeSession,
+    flipCard,
+    handleReview,
+  };
+}
