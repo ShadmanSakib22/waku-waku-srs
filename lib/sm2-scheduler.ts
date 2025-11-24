@@ -42,8 +42,7 @@ const DEFAULT_EF = 2.5;
 const MIN_EF = 1.3;
 
 // Learning steps (in minutes)
-// This ensures "Again" cards appear back in 1 minute.
-const LEARNING_STEPS = [1, 10];
+const LEARNING_STEPS = [10, 60];
 
 // Hard button multiplier during learning
 const HARD_LEARNING_MULTIPLIER = 1.2;
