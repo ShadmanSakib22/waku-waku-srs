@@ -264,7 +264,7 @@ function FrontCard({
   return (
     <div className="flex flex-col items-center grow justify-center space-y-8 animate-in fade-in duration-300">
       <div className="text-center space-y-4">
-        <h1 className="text-6xl md:text-7xl font-bold select-none text-foreground">
+        <h1 className="text-4xl md:text-5xl font-bold select-none text-foreground">
           {card.kanji}
         </h1>
 
