@@ -1,0 +1,289 @@
+[
+  {
+    "id": "chapter-7-1",
+    "kanji": "とっきゅう",
+    "romaji": "tokkyuu",
+    "description": "Express train",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-2",
+    "kanji": "びじゅつかん",
+    "romaji": "bijutsukan",
+    "description": "Art museum",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-3",
+    "kanji": "もう",
+    "romaji": "mou",
+    "description": "Already",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-4",
+    "kanji": "きっぷ",
+    "romaji": "kippu",
+    "description": "Ticket",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-5",
+    "kanji": "プラットホーム",
+    "romaji": "purattohoomu",
+    "description": "Platform",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-6",
+    "kanji": "かくにん",
+    "romaji": "kakunin",
+    "description": "Check / Confirmation (Noun/Suru-verb stem)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-7",
+    "kanji": "まだ",
+    "romaji": "mada",
+    "description": "Not yet",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-8",
+    "kanji": "えっと",
+    "romaji": "etto",
+    "description": "Um / Well (Interjection used when hesitating)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-9",
+    "kanji": "ホーム",
+    "romaji": "hoomu",
+    "description": "Platform (often used interchangeably with プラットホーム)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-10",
+    "kanji": "なか",
+    "romaji": "naka",
+    "description": "Inside",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-11",
+    "kanji": "ホテル",
+    "romaji": "hoteru",
+    "description": "Hotel",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-12",
+    "kanji": "よやく",
+    "romaji": "yoyaku",
+    "description": "Reservation (Noun/Suru-verb stem)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-13",
+    "kanji": "しゅくだい",
+    "romaji": "shukudai",
+    "description": "Homework",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-14",
+    "kanji": "レポート",
+    "romaji": "repoto",
+    "description": "Report / Paper",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-15",
+    "kanji": "シャワー",
+    "romaji": "shawā",
+    "description": "Shower (Noun)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-16",
+    "kanji": "あびる",
+    "romaji": "abiru",
+    "description": "To shower / To bathe (Masu: あびます / Present: あびる / Past: あびた)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-17",
+    "kanji": "いっしょに",
+    "romaji": "issho ni",
+    "description": "Together",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-18",
+    "kanji": "ピザ",
+    "romaji": "piza",
+    "description": "Pizza",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-19",
+    "kanji": "ちょっと",
+    "romaji": "chotto",
+    "description": "A little / A moment (informal)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-20",
+    "kanji": "どうぶつえん",
+    "romaji": "dōbutsuen",
+    "description": "Zoo",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-21",
+    "kanji": "れんしゅう",
+    "romaji": "renshū",
+    "description": "Practice (Noun/Suru-verb stem)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-22",
+    "kanji": "山",
+    "romaji": "yama",
+    "description": "Mountain",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-23",
+    "kanji": "のぼる",
+    "romaji": "noboru",
+    "description": "To climb (Masu: のぼります / Present: のぼる / Past: のぼった)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-24",
+    "kanji": "あそぶ",
+    "romaji": "asobu",
+    "description": "To play / To hang out (Masu: あそびます / Present: あそぶ / Past: あそんだ)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-25",
+    "kanji": "うたう",
+    "romaji": "utau",
+    "description": "To sing (Masu: うたいます / Present: うたう / Past: うたった)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-26",
+    "kanji": "カラオケ",
+    "romaji": "karaoke",
+    "description": "Karaoke",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-27",
+    "kanji": "おちゃ",
+    "romaji": "ocha",
+    "description": "Japanese tea / Green tea",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-28",
+    "kanji": "みんなで",
+    "romaji": "minna de",
+    "description": "Everyone / All together",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-29",
+    "kanji": "ばんごはん",
+    "romaji": "bangohan",
+    "description": "Dinner / Evening meal",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-30",
+    "kanji": "さいふ",
+    "romaji": "saifu",
+    "description": "Wallet / Purse",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-31",
+    "kanji": "わすれる",
+    "romaji": "wasureru",
+    "description": "To forget / leave behind (Masu: わすれます / Present: わすれる / Past: わすれた)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-32",
+    "kanji": "店",
+    "romaji": "mise",
+    "description": "Shop / Store",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-33",
+    "kanji": "お城",
+    "romaji": "oshiro",
+    "description": "Castle",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-34",
+    "kanji": "たこやき",
+    "romaji": "takoyaki",
+    "description": "Takoyaki (octopus balls, a Japanese food)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-35",
+    "kanji": "お寺",
+    "romaji": "otera",
+    "description": "Temple (Buddhist)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-36",
+    "kanji": "あう",
+    "romaji": "au",
+    "description": "To meet (Masu: あいます / Present: あう / Past: あった)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-37",
+    "kanji": "プール",
+    "romaji": "pūru",
+    "description": "Pool",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-38",
+    "kanji": "およぐ",
+    "romaji": "oyogu",
+    "description": "To swim (Masu: およぎます / Present: およぐ / Past: およいだ)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-39",
+    "kanji": "むかえる",
+    "romaji": "mukaeru",
+    "description": "To welcome / To pick up (Masu: むかえます / Present: むかえる / Past: むかえた)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-40",
+    "kanji": "りょこう",
+    "romaji": "ryokō",
+    "description": "Travel / Trip (Noun/Suru-verb stem)",
+    "chapterId": "chapter-7"
+  },
+  {
+    "id": "chapter-7-41",
+    "kanji": "ゲームセンター",
+    "romaji": "gēmusentā",
+    "description": "Game center (Arcade)",
+    "chapterId": "chapter-7"
+  }
+]

@@ -1,0 +1,578 @@
+[
+  {
+    "id": "chapter-8-1",
+    "kanji": "スーツケース",
+    "kana": "すーつけーす",
+    "romaji": "sūtsukēsu",
+    "description": "Suitcase",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-2",
+    "kanji": "古い",
+    "kana": "ふるい",
+    "romaji": "furui",
+    "description": "Old (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-3",
+    "kanji": "~年",
+    "kana": "~ねん",
+    "romaji": "~nen",
+    "description": "~ Year (Counter for years)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-4",
+    "kanji": "まえ",
+    "kana": "まえ",
+    "romaji": "mae",
+    "description": "Before / Front",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-5",
+    "kanji": "新しい",
+    "kana": "あたらしい",
+    "romaji": "atarashii",
+    "description": "New (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-6",
+    "kanji": "あ、あ、",
+    "kana": "あ、あ、",
+    "romaji": "ā, ā,",
+    "description": "Ah, ah (Expression of realization, agreement, or concern)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-7",
+    "kanji": "少し",
+    "kana": "すこし",
+    "romaji": "sukoshi",
+    "description": "A little / A few (Adverb)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-8",
+    "kanji": "小さい",
+    "kana": "ちいさい",
+    "romaji": "chiisai",
+    "description": "Small (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-9",
+    "kanji": "あまり",
+    "kana": "あまり",
+    "romaji": "amari",
+    "description": "Not very / Not much (Used with negative verbs)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-10",
+    "kanji": "大きい",
+    "kana": "おおきい",
+    "romaji": "ookii",
+    "description": "Big / Large (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-11",
+    "kanji": "とても",
+    "kana": "とても",
+    "romaji": "totemo",
+    "description": "Very (Adverb)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-12",
+    "kanji": "しずかな",
+    "kana": "しずかな",
+    "romaji": "shizuka na",
+    "description": "Quiet (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-13",
+    "kanji": "また",
+    "kana": "また",
+    "romaji": "mata",
+    "description": "Again / Also",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-14",
+    "kanji": "町",
+    "kana": "まち",
+    "romaji": "machi",
+    "description": "Town / City",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-15",
+    "kanji": "にぎやかな",
+    "kana": "にぎやかな",
+    "romaji": "nigiyaka na",
+    "description": "Lively / Bustling (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-16",
+    "kanji": "むずかしい",
+    "kana": "むずかしい",
+    "romaji": "muzukashii",
+    "description": "Difficult (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-17",
+    "kanji": "ひくい",
+    "kana": "ひくい",
+    "romaji": "hikui",
+    "description": "Low (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-18",
+    "kanji": "おもしろい",
+    "kana": "おもしろい",
+    "romaji": "omoshiroi",
+    "description": "Interesting / Funny (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-19",
+    "kanji": "元気な",
+    "kana": "げんきな",
+    "romaji": "genki na",
+    "description": "Healthy / Energetic (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-20",
+    "kanji": "きれいな",
+    "kana": "きれいな",
+    "romaji": "kirei na",
+    "description": "Pretty / Clean (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-21",
+    "kanji": "ゆうめいな",
+    "kana": "ゆうめいな",
+    "romaji": "yūmei na",
+    "description": "Famous (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-22",
+    "kanji": "ひまな",
+    "kana": "ひまな",
+    "romaji": "hima na",
+    "description": "Free / Not busy (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-23",
+    "kanji": "すてきな",
+    "kana": "すてきな",
+    "romaji": "suteki na",
+    "description": "Nice / Wonderful / Cool (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-24",
+    "kanji": "べんりな",
+    "kana": "べんりな",
+    "romaji": "benri na",
+    "description": "Convenient (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-25",
+    "kanji": "あつい",
+    "kana": "あつい",
+    "romaji": "atsui",
+    "description": "Hot (Weather/Temperature) (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-26",
+    "kanji": "すずしい",
+    "kana": "すずしい",
+    "romaji": "suzushii",
+    "description": "Cool (Weather) (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-27",
+    "kanji": "ビル",
+    "kana": "びる",
+    "romaji": "biru",
+    "description": "Building",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-28",
+    "kanji": "通り",
+    "kana": "とおり",
+    "romaji": "tōri",
+    "description": "Street / Avenue",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-29",
+    "kanji": "きたない",
+    "kana": "きたない",
+    "romaji": "kitanai",
+    "description": "Dirty (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-30",
+    "kanji": "かんたんな",
+    "kana": "かんたんな",
+    "romaji": "kantan na",
+    "description": "Easy / Simple (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-31",
+    "kanji": "とおい",
+    "kana": "とおい",
+    "romaji": "tōi",
+    "description": "Far (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-32",
+    "kanji": "ちかい",
+    "kana": "ちかい",
+    "romaji": "chikai",
+    "description": "Near / Close (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-33",
+    "kanji": "いそがしい",
+    "kana": "いそがしい",
+    "romaji": "isogashii",
+    "description": "Busy (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-34",
+    "kanji": "やさしい",
+    "kana": "やさしい",
+    "romaji": "yasashii",
+    "description": "Easy (for tasks) / Kind (for people) (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-35",
+    "kanji": "しんせつな",
+    "kana": "しんせつな",
+    "romaji": "shinsetsu na",
+    "description": "Kind / Friendly (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-36",
+    "kanji": "かきごおり",
+    "kana": "かきごおり",
+    "romaji": "kakigōri",
+    "description": "Shaved ice",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-37",
+    "kanji": "どんな",
+    "kana": "どんな",
+    "romaji": "donna",
+    "description": "What kind of...?",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-38",
+    "kanji": "あじ",
+    "kana": "あじ",
+    "romaji": "aji",
+    "description": "Taste / Flavor",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-39",
+    "kanji": "いちご",
+    "kana": "いちご",
+    "romaji": "ichigo",
+    "description": "Strawberry",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-40",
+    "kanji": "あまい",
+    "kana": "あまい",
+    "romaji": "amai",
+    "description": "Sweet (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-41",
+    "kanji": "そして",
+    "kana": "そして",
+    "romaji": "soshite",
+    "description": "And (Used to connect sentences or clauses)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-42",
+    "kanji": "つめたい",
+    "kana": "つめたい",
+    "romaji": "tsumetai",
+    "description": "Cold (to the touch) (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-43",
+    "kanji": "こわい",
+    "kana": "こわい",
+    "romaji": "kowai",
+    "description": "Scary / Frightening (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-44",
+    "kanji": "せまい",
+    "kana": "せまい",
+    "romaji": "semai",
+    "description": "Narrow / Small (in area) (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-45",
+    "kanji": "ひろい",
+    "kana": "ひろい",
+    "romaji": "hiroi",
+    "description": "Wide / Spacious (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-46",
+    "kanji": "たかい",
+    "kana": "たかい",
+    "romaji": "takai",
+    "description": "Expensive / Tall (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-47",
+    "kanji": "まじめな",
+    "kana": "まじめな",
+    "romaji": "majime na",
+    "description": "Serious / Diligent (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-48",
+    "kanji": "おもい",
+    "kana": "おもい",
+    "romaji": "omoi",
+    "description": "Heavy (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-49",
+    "kanji": "かるい",
+    "kana": "かるい",
+    "romaji": "karui",
+    "description": "Light (Weight) (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-50",
+    "kanji": "うーん",
+    "kana": "うーん",
+    "romaji": "ūn",
+    "description": "Hmm... / Well... (Interjection expressing thought or hesitation)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-51",
+    "kanji": "あおい",
+    "kana": "あおい",
+    "romaji": "aoi",
+    "description": "Blue (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-52",
+    "kanji": "くろい",
+    "kana": "くろい",
+    "romaji": "kuroi",
+    "description": "Black (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-53",
+    "kanji": "はやい",
+    "kana": "はやい",
+    "romaji": "hayai",
+    "description": "Fast / Early (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-54",
+    "kanji": "音",
+    "kana": "おと",
+    "romaji": "oto",
+    "description": "Sound / Noise",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-55",
+    "kanji": "うるさい",
+    "kana": "うるさい",
+    "romaji": "urusai",
+    "description": "Noisy / Annoying (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-56",
+    "kanji": "やすい",
+    "kana": "やすい",
+    "romaji": "yasui",
+    "description": "Cheap (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-57",
+    "kanji": "東大寺",
+    "kana": "とうだいじ",
+    "romaji": "Tōdaiji",
+    "description": "Tōdaiji Temple (Famous temple in Nara)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-58",
+    "kanji": "からい",
+    "kana": "からい",
+    "romaji": "karai",
+    "description": "Spicy / Hot (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-59",
+    "kanji": "明るい",
+    "kana": "あかるい",
+    "romaji": "akarui",
+    "description": "Bright / Cheerful (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-60",
+    "kanji": "たのしい",
+    "kana": "たのしい",
+    "romaji": "tanoshii",
+    "description": "Fun / Enjoyable (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-61",
+    "kanji": "おみやげ",
+    "kana": "おみやげ",
+    "romaji": "omiyage",
+    "description": "Souvenir / Gift",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-62",
+    "kanji": "おかしい",
+    "kana": "おかしい",
+    "romaji": "okashii",
+    "description": "Strange / Funny (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-63",
+    "kanji": "おいしい",
+    "kana": "おいしい",
+    "romaji": "oishii",
+    "description": "Delicious / Tasty (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-64",
+    "kanji": "スタッフ",
+    "kana": "すたっふ",
+    "romaji": "sutaffu",
+    "description": "Staff",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-65",
+    "kanji": "くらい",
+    "kana": "くらい",
+    "romaji": "kurai",
+    "description": "Dark (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-66",
+    "kanji": "うれしい",
+    "kana": "うれしい",
+    "romaji": "ureshii",
+    "description": "Happy / Glad (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-67",
+    "kanji": "たいへんな",
+    "kana": "たいへんな",
+    "romaji": "taihen na",
+    "description": "Tough / Dreadful / Serious (Na-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-68",
+    "kanji": "なつやすみ",
+    "kana": "なつやすみ",
+    "romaji": "natsuyasumi",
+    "description": "Summer vacation",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-69",
+    "kanji": "北海道",
+    "kana": "ほっかいどう",
+    "romaji": "Hokkaidō",
+    "description": "Hokkaido (Northernmost island of Japan)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-70",
+    "kanji": "さむい",
+    "kana": "さむい",
+    "romaji": "samui",
+    "description": "Cold (Weather) (I-adjective)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-71",
+    "kanji": "ジョギング",
+    "kana": "じょぎんぐ",
+    "romaji": "jogingu",
+    "description": "Jogging (Noun/Suru-verb stem)",
+    "chapterId": "chapter-8"
+  },
+  {
+    "id": "chapter-8-72",
+    "kanji": "はくぶつかん",
+    "kana": "はくぶつかん",
+    "romaji": "hakubutsukan",
+    "description": "Museum",
+    "chapterId": "chapter-8"
+  }
+]

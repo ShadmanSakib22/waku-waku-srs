@@ -3,364 +3,406 @@
     "id": "chapter-6-1",
     "kanji": "もうすぐ",
     "romaji": "mousugu",
-    "description": "soon; before long",
-    "chapterId": "chapter-6"
+    "description": "Soon; before long",
+    "chapterId": "chapter-6-1"
   },
   {
     "id": "chapter-6-2",
     "kanji": "プレゼント",
     "romaji": "purezento",
-    "description": "present",
-    "chapterId": "chapter-6"
+    "description": "Present / Gift",
+    "chapterId": "chapter-6-2"
   },
   {
     "id": "chapter-6-3",
     "kanji": "あげる",
     "romaji": "ageru",
-    "description": "to give (to a person of equal or lower status)",
-    "chapterId": "chapter-6"
+    "description": "To give (to a person of equal or lower status) (Masu: あげます / Present: あげる / Past: あげた)",
+    "chapterId": "chapter-6-3"
   },
   {
     "id": "chapter-6-4",
     "kanji": "花",
     "romaji": "hana",
-    "description": "flower",
-    "chapterId": "chapter-6"
+    "description": "Flower",
+    "chapterId": "chapter-6-4"
   },
   {
     "id": "chapter-6-5",
     "kanji": "いい",
     "romaji": "ii",
-    "description": "good",
-    "chapterId": "chapter-6"
+    "description": "Good",
+    "chapterId": "chapter-6-5"
   },
   {
     "id": "chapter-6-6",
     "kanji": "ペンケース",
     "romaji": "penkeesu",
-    "description": "pencil case",
-    "chapterId": "chapter-6"
+    "description": "Pencil case",
+    "chapterId": "chapter-6-6"
   },
   {
     "id": "chapter-6-7",
     "kanji": "そうです",
     "romaji": "sou desu",
-    "description": "That is right; I think so",
-    "chapterId": "chapter-6"
+    "description": "That is right; I think so (Polite statement of agreement/conjecture)",
+    "chapterId": "chapter-6-7"
   },
   {
     "id": "chapter-6-8",
     "kanji": "もらう",
     "romaji": "morau",
-    "description": "to receive (from a person of equal or lower status)",
-    "chapterId": "chapter-6"
+    "description": "To receive (from a person of equal or lower status) (Masu: もらいます / Present: もらう / Past: もらった)",
+    "chapterId": "chapter-6-8"
   },
   {
     "id": "chapter-6-9",
     "kanji": "あ、",
     "romaji": "a,",
-    "description": "Oh!",
-    "chapterId": "chapter-6"
+    "description": "Oh! (Expression of realization or sudden notice)",
+    "chapterId": "chapter-6-9"
   },
   {
     "id": "chapter-6-10",
     "kanji": "まいとし",
     "romaji": "maitoshi",
-    "description": "every year",
-    "chapterId": "chapter-6"
+    "description": "Every year",
+    "chapterId": "chapter-6-10"
   },
   {
     "id": "chapter-6-11",
-    "kanji": "おべんとう",
-    "romaji": "obentou",
-    "description": "lunch box",
-    "chapterId": "chapter-6"
+    "kanji": "てがみ",
+    "romaji": "tegami",
+    "description": "Letter",
+    "chapterId": "chapter-6-11"
   },
   {
     "id": "chapter-6-12",
-    "kanji": "りょうり",
-    "romaji": "ryouri",
-    "description": "cooking; cuisine",
-    "chapterId": "chapter-6"
+    "kanji": "チョコレート",
+    "romaji": "chokoreeto",
+    "description": "Chocolate",
+    "chapterId": "chapter-6-12"
   },
   {
     "id": "chapter-6-13",
-    "kanji": "ならう",
-    "romaji": "narau",
-    "description": "to learn",
-    "chapterId": "chapter-6"
+    "kanji": "チケット",
+    "romaji": "chiketto",
+    "description": "Ticket",
+    "chapterId": "chapter-6-13"
   },
   {
     "id": "chapter-6-14",
-    "kanji": "たまごやき",
-    "romaji": "tamagoyaki",
-    "description": "Japanese omelet",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-15",
-    "kanji": "おしえる",
-    "romaji": "oshieru",
-    "description": "to teach",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-16",
-    "kanji": "送る",
-    "romaji": "okuru",
-    "description": "to send",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-17",
-    "kanji": "メール",
-    "romaji": "meeru",
-    "description": "email",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-18",
-    "kanji": "おじゃまします",
-    "romaji": "ojamashimasu",
-    "description": "Excuse me for disturbing (when entering someone's home)",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-19",
-    "kanji": "いらっしゃい",
-    "romaji": "irasshai",
-    "description": "Welcome (casual)",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-20",
-    "kanji": "これから",
-    "romaji": "korekara",
-    "description": "from now on",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-21",
-    "kanji": "てつだう",
-    "romaji": "tetsudau",
-    "description": "to help; to assist",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-22",
-    "kanji": "あれ？",
-    "romaji": "are?",
-    "description": "Huh? (surprise/question)",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-23",
-    "kanji": "あっ、",
-    "romaji": "a,",
-    "description": "Oh! (sudden realization)",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-24",
-    "kanji": "ほんとう",
-    "romaji": "hontou",
-    "description": "really; truly",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-25",
-    "kanji": "だいじょうぶな",
-    "romaji": "daijoubu na",
-    "description": "all right; safe; okay",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-26",
-    "kanji": "わかりました",
-    "romaji": "wakarimashita",
-    "description": "I understand; I see",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-27",
-    "kanji": "お気を付けて",
-    "romaji": "o ki wo tsukete",
-    "description": "Please take care (when someone is leaving)",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-28",
-    "kanji": "てがみ",
-    "romaji": "tegami",
-    "description": "letter",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-29",
-    "kanji": "チョコレート",
-    "romaji": "chokoreeto",
-    "description": "chocolate",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-30",
-    "kanji": "チケット",
-    "romaji": "chiketto",
-    "description": "ticket",
-    "chapterId": "chapter-6"
-  },
-  {
-    "id": "chapter-6-31",
     "kanji": "母の日",
     "romaji": "haha no hi",
     "description": "Mother's Day",
-    "chapterId": "chapter-6"
+    "chapterId": "chapter-6-14"
   },
   {
-    "id": "chapter-6-32",
+    "id": "chapter-6-15",
     "kanji": "おかあさん",
     "romaji": "okaasan",
-    "description": "mother",
-    "chapterId": "chapter-6"
+    "description": "Mother (Polite term for one's own or another's mother)",
+    "chapterId": "chapter-6-15"
   },
   {
-    "id": "chapter-6-33",
+    "id": "chapter-6-16",
     "kanji": "ハンカチ",
     "romaji": "hankachi",
-    "description": "handkerchief",
-    "chapterId": "chapter-6"
+    "description": "Handkerchief",
+    "chapterId": "chapter-6-16"
   },
   {
-    "id": "chapter-6-34",
+    "id": "chapter-6-17",
     "kanji": "マンガ",
     "romaji": "manga",
-    "description": "manga (comics)",
-    "chapterId": "chapter-6"
+    "description": "Manga (Comics)",
+    "chapterId": "chapter-6-17"
   },
   {
-    "id": "chapter-6-35",
+    "id": "chapter-6-18",
     "kanji": "ネクタイ",
     "romaji": "nekutai",
-    "description": "tie",
-    "chapterId": "chapter-6"
+    "description": "Tie (Necktie)",
+    "chapterId": "chapter-6-18"
   },
   {
-    "id": "chapter-6-36",
-    "kanji": "いくつ",
-    "romaji": "ikutsu",
-    "description": "how many",
-    "chapterId": "chapter-6"
+    "id": "chapter-6-19",
+    "kanji": "おべんとう",
+    "romaji": "obentou",
+    "description": "Lunch box / Bento",
+    "chapterId": "chapter-6-19"
   },
   {
-    "id": "chapter-6-37",
-    "kanji": "たべ物",
-    "romaji": "tabemono",
-    "description": "food",
-    "chapterId": "chapter-6"
+    "id": "chapter-6-20",
+    "kanji": "りょうり",
+    "romaji": "ryouri",
+    "description": "Cooking; cuisine (Noun/Suru-verb stem)",
+    "chapterId": "chapter-6-20"
   },
   {
-    "id": "chapter-6-38",
-    "kanji": "入れる",
-    "romaji": "ireru",
-    "description": "to put in",
-    "chapterId": "chapter-6"
+    "id": "chapter-6-21",
+    "kanji": "ならう",
+    "romaji": "narau",
+    "description": "To learn / To take lessons (Masu: ならいます / Present: ならう / Past: ならった)",
+    "chapterId": "chapter-6-21"
   },
   {
-    "id": "chapter-6-39",
-    "kanji": "かず",
-    "romaji": "kazu",
-    "description": "number",
-    "chapterId": "chapter-6"
+    "id": "chapter-6-22",
+    "kanji": "たまごやき",
+    "romaji": "tamagoyaki",
+    "description": "Tamagoyaki (Japanese omelet)",
+    "chapterId": "chapter-6-22"
   },
   {
-    "id": "chapter-6-40",
+    "id": "chapter-6-23",
+    "kanji": "おしえる",
+    "romaji": "oshieru",
+    "description": "To teach / To inform (Masu: おしえます / Present: おしえる / Past: おしえた)",
+    "chapterId": "chapter-6-23"
+  },
+  {
+    "id": "chapter-6-24",
+    "kanji": "送る",
+    "romaji": "okuru",
+    "description": "To send (Masu: 送ります / Present: 送る / Past: 送った)",
+    "chapterId": "chapter-6-24"
+  },
+  {
+    "id": "chapter-6-25",
+    "kanji": "メール",
+    "romaji": "meeru",
+    "description": "Email",
+    "chapterId": "chapter-6-25"
+  },
+  {
+    "id": "chapter-6-26",
+    "kanji": "かす",
+    "romaji": "kasu",
+    "description": "To lend (Masu: かします / Present: かす / Past: かした)",
+    "chapterId": "chapter-6-26"
+  },
+  {
+    "id": "chapter-6-27",
     "kanji": "電話",
     "romaji": "denwa",
-    "description": "telephone",
-    "chapterId": "chapter-6"
+    "description": "Telephone / Phone call (Noun/Suru-verb stem)",
+    "chapterId": "chapter-6-27"
   },
   {
-    "id": "chapter-6-41",
+    "id": "chapter-6-28",
     "kanji": "かける",
     "romaji": "kakeru",
-    "description": "to make a phone call",
-    "chapterId": "chapter-6"
+    "description": "To make a phone call (Masu: かけます / Present: かける / Past: かけた)",
+    "chapterId": "chapter-6-28"
   },
   {
-    "id": "chapter-6-42",
+    "id": "chapter-6-29",
     "kanji": "オーストラリア",
     "romaji": "oosutoraria",
     "description": "Australia",
-    "chapterId": "chapter-6"
+    "chapterId": "chapter-6-29"
+  },
+  {
+    "id": "chapter-6-30",
+    "kanji": "今月",
+    "romaji": "kongetsu",
+    "description": "This month",
+    "chapterId": "chapter-6-30"
+  },
+  {
+    "id": "chapter-6-31",
+    "kanji": "おじゃまします",
+    "romaji": "ojamashimasu",
+    "description": "Excuse me for disturbing (A phrase used when entering someone's home)",
+    "chapterId": "chapter-6-31"
+  },
+  {
+    "id": "chapter-6-32",
+    "kanji": "いらっしゃい",
+    "romaji": "irasshai",
+    "description": "Welcome (Casual)",
+    "chapterId": "chapter-6-32"
+  },
+  {
+    "id": "chapter-6-33",
+    "kanji": "これから",
+    "romaji": "korekara",
+    "description": "From now on; soon",
+    "chapterId": "chapter-6-33"
+  },
+  {
+    "id": "chapter-6-34",
+    "kanji": "てつだう",
+    "romaji": "tetsudau",
+    "description": "To help; to assist (Masu: てつだいます / Present: てつだう / Past: てつだった)",
+    "chapterId": "chapter-6-34"
+  },
+  {
+    "id": "chapter-6-35",
+    "kanji": "あれ？",
+    "romaji": "are?",
+    "description": "Huh? (Expression of surprise or question)",
+    "chapterId": "chapter-6-35"
+  },
+  {
+    "id": "chapter-6-36",
+    "kanji": "あっ、",
+    "romaji": "a,",
+    "description": "Oh! (Sudden realization or quick reaction)",
+    "chapterId": "chapter-6-36"
+  },
+  {
+    "id": "chapter-6-37",
+    "kanji": "ほんとう",
+    "romaji": "hontou",
+    "description": "Really; truly (Noun/Adverb)",
+    "chapterId": "chapter-6-37"
+  },
+  {
+    "id": "chapter-6-38",
+    "kanji": "だいじょうぶな",
+    "romaji": "daijoubu na",
+    "description": "All right; safe; okay (Na-adjective)",
+    "chapterId": "chapter-6-38"
+  },
+  {
+    "id": "chapter-6-39",
+    "kanji": "わかりました",
+    "romaji": "wakarimashita",
+    "description": "I understand; I see (Polite past form of わかる - to understand)",
+    "chapterId": "chapter-6-39"
+  },
+  {
+    "id": "chapter-6-40",
+    "kanji": "お気を付けて",
+    "romaji": "o ki wo tsukete",
+    "description": "Please take care (Used when someone is leaving - Te-form of 気を付ける)",
+    "chapterId": "chapter-6-40"
+  },
+  {
+    "id": "chapter-6-41",
+    "kanji": "電話ばんごう",
+    "romaji": "denwa bangou",
+    "description": "Telephone number",
+    "chapterId": "chapter-6-41"
+  },
+  {
+    "id": "chapter-6-42",
+    "kanji": "にもつ",
+    "romaji": "nimotsu",
+    "description": "Luggage; package; belongings",
+    "chapterId": "chapter-6-42"
   },
   {
     "id": "chapter-6-43",
-    "kanji": "今月",
-    "romaji": "kongetsu",
-    "description": "this month",
-    "chapterId": "chapter-6"
+    "kanji": "おさら",
+    "romaji": "osara",
+    "description": "Plate; dish",
+    "chapterId": "chapter-6-43"
   },
   {
     "id": "chapter-6-44",
-    "kanji": "電話ばんごう",
-    "romaji": "denwa bangou",
-    "description": "telephone number",
-    "chapterId": "chapter-6"
+    "kanji": "とる",
+    "romaji": "toru",
+    "description": "To get / To take (e.g., to take a plate) (Masu: とります / Present: とる / Past: とった)",
+    "chapterId": "chapter-6-44"
   },
   {
     "id": "chapter-6-45",
-    "kanji": "にもつ",
-    "romaji": "nimotsu",
-    "description": "luggage; package",
-    "chapterId": "chapter-6"
+    "kanji": "とる",
+    "romaji": "toru",
+    "description": "To take / To get (e.g., to take a package) (Masu: とります / Present: とる / Past: とった)",
+    "chapterId": "chapter-6-45"
   },
   {
     "id": "chapter-6-46",
-    "kanji": "おさら",
-    "romaji": "osara",
-    "description": "plate; dish",
-    "chapterId": "chapter-6"
+    "kanji": "エアコン",
+    "romaji": "eakon",
+    "description": "Air conditioner",
+    "chapterId": "chapter-6-46"
   },
   {
     "id": "chapter-6-47",
-    "kanji": "とる",
-    "romaji": "toru",
-    "description": "to get (e.g., to take a plate)",
-    "chapterId": "chapter-6"
+    "kanji": "けす",
+    "romaji": "kesu",
+    "description": "To turn off (power); to erase (Masu: けします / Present: けす / Past: けした)",
+    "chapterId": "chapter-6-47"
   },
   {
     "id": "chapter-6-48",
-    "kanji": "とる",
-    "romaji": "toru",
-    "description": "to take (e.g., to take a package)",
-    "chapterId": "chapter-6"
+    "kanji": "虫",
+    "romaji": "mushi",
+    "description": "Insect; bug",
+    "chapterId": "chapter-6-48"
   },
   {
     "id": "chapter-6-49",
-    "kanji": "エアコン",
-    "romaji": "eakon",
-    "description": "air conditioner",
-    "chapterId": "chapter-6"
+    "kanji": "まど",
+    "romaji": "mado",
+    "description": "Window",
+    "chapterId": "chapter-6-49"
   },
   {
     "id": "chapter-6-50",
-    "kanji": "けす",
-    "romaji": "kesu",
-    "description": "to turn off (power); to erase",
-    "chapterId": "chapter-6"
+    "kanji": "開ける",
+    "romaji": "akeru",
+    "description": "To open (something) (Masu: 開けます / Present: 開ける / Past: 開けた)",
+    "chapterId": "chapter-6-50"
   },
   {
     "id": "chapter-6-51",
-    "kanji": "虫",
-    "romaji": "mushi",
-    "description": "insect; bug",
-    "chapterId": "chapter-6"
+    "kanji": "ごちそうさまでした",
+    "romaji": "gochisosamadeshita",
+    "description": "Thank you for the meal (Phrase used after finishing a meal)",
+    "chapterId": "chapter-6-51"
   },
   {
     "id": "chapter-6-52",
-    "kanji": "まど",
-    "romaji": "mado",
-    "description": "window",
-    "chapterId": "chapter-6"
+    "kanji": "洗う",
+    "romaji": "arau",
+    "description": "To wash (Masu: 洗います / Present: 洗う / Past: 洗った)",
+    "chapterId": "chapter-6-52"
+  },
+  {
+    "id": "chapter-6-53",
+    "kanji": "電気",
+    "romaji": "denki",
+    "description": "Electricity; light",
+    "chapterId": "chapter-6-53"
+  },
+  {
+    "id": "chapter-6-54",
+    "kanji": "つける",
+    "romaji": "tsukeru",
+    "description": "To turn on (power/light); to attach (Masu: つけます / Present: つける / Past: つけた)",
+    "chapterId": "chapter-6-54"
+  },
+  {
+    "id": "chapter-6-55",
+    "kanji": "閉める",
+    "romaji": "shimeru",
+    "description": "To close (something) (Masu: 閉めます / Present: 閉める / Past: 閉めた)",
+    "chapterId": "chapter-6-55"
+  },
+  {
+    "id": "chapter-6-56",
+    "kanji": "もつ",
+    "romaji": "motsu",
+    "description": "To hold / To possess (Masu: もちます / Present: もつ / Past: もった)",
+    "chapterId": "chapter-6-56"
+  },
+  {
+    "id": "chapter-6-57",
+    "kanji": "たべ物",
+    "romaji": "tabemono",
+    "description": "Food / Edibles",
+    "chapterId": "chapter-6-57"
+  },
+  {
+    "id": "chapter-6-58",
+    "kanji": "入れる",
+    "romaji": "ireru",
+    "description": "To put in / To insert (Masu: 入れます / Present: 入れる / Past: 入れた)",
+    "chapterId": "chapter-6-58"
   }
 ]

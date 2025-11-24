@@ -1,7 +1,7 @@
 // lib/dashboard-data.ts
 import "server-only";
 import { db } from "@/lib/firebase-admin";
-import { DECKS, DeckInfo } from "./deck-info";
+import { DECKS, DeckInfo } from "@/public/decks/deck-info";
 
 // --- CONFIGURATION CONSTANTS ---
 const APP_SLUG = process.env.NEXT_PUBLIC_APP_SLUG;
@@ -38,7 +38,7 @@ async function getDeckProgressSummary(
     const progressCollectionRef = db.collection(progressCollectionPath);
 
     // A card is "Due Now" if its nextReview timestamp is less than or equal to the current time (now).
-    // require repetitions > 0 to filter out cards that have never been seen (i.e., new cards).
+    // learning cards are also meant to be counted due that's why we cannot use repetitions > 0
     const dueNowQuery = progressCollectionRef.where("nextReview", "<=", now);
 
     // realtime aggregation
